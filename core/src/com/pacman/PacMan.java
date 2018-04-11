@@ -16,6 +16,7 @@ public class PacMan extends Game {
 		setScreen(new PlayScreen(this));
 	}
 	@Override
+	
 	public void render() {
 		super.render();
 	}
