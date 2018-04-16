@@ -8,9 +8,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.profiling.GL20Interceptor;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -22,19 +26,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pacman.PacMan;
+import com.pacman.ConvertMapToObject.BuildObject;
 
 public class PlayScreen implements Screen{
 	
-	private final float WIDTH = 19.0f;
-	private final float HEIGHT = 21.0f;
+	private final float WIDTH = 35.0f;
+	private final float HEIGHT = 15.0f;
 	
 	private PacMan game;
 	private SpriteBatch batch;
@@ -47,6 +54,8 @@ public class PlayScreen implements Screen{
 	
 	
 	// just for demo
+	
+	private TextureAtlas atlas; 
 	private Texture pacmanTexture;
 	private Vector2 position;
 	private float velocity = 1f;
@@ -55,7 +64,9 @@ public class PlayScreen implements Screen{
 	private World world;
 	private Body player;
 	private Box2DDebugRenderer b2Renderer;
-	
+	private Animation<TextureRegion> PacmanMoveLeft;
+	private Texture animationSheet;
+	private float stateTime;
 	public PlayScreen(PacMan game) {
 		this.game = game;
 		this.batch = game.batch;
@@ -68,40 +79,39 @@ public class PlayScreen implements Screen{
 		camera.translate(WIDTH / 2, HEIGHT / 2);
 		//camera.setToOrtho(false, WIDTH / 2f, HEIGHT / 2f);
 		camera.update();
-		
 		batch = new SpriteBatch();
 		
+		//
 		
+		
+		engine = new Engine();
 		// load map
-		tiledMap = new TmxMapLoader().load("map/map.tmx");
+		tiledMap = new TmxMapLoader().load("map/map2.tmx");
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
-		tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/16f);
+		tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/32f);
+		world = new World(new Vector2(0, 0), true);
+		new BuildObject(tiledMap, world, engine).build();
 		
-		// just test for demo
-		pacmanTexture = new Texture("test3.png");
-		position = new Vector2(16, 16);
-		b2Renderer = new Box2DDebugRenderer();
-		world = new World(new Vector2(0, 0), false);
-		B2dWorldCreator();
-		player = createBox(110, 184, 15, 15, false);
-		 
 	}
 
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		world.step(1/60f, 6, 2);
-		update(delta);
+		world.step(1/60f, 8, 3);
+		//update(delta);
+		engine.update(delta);
+		
+		// test animation
 		
 		
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 		
 		// render the world of physic
-		b2Renderer.render(world, camera.combined);
-		
-		
+		//b2Renderer.render(world, camera.combined);
+		stateTime += Gdx.graphics.getDeltaTime();
 	
 		
 	}
@@ -143,12 +153,16 @@ public class PlayScreen implements Screen{
 			System.out.println(player.getPosition());
 	}
 	
+	public void createAnimation() {
+		
+	}
 	
 	
 	public Body createBox(int x, int y, int w, int h, boolean isStatic) {
 		Body pBody;
 		BodyDef  def = new BodyDef();
 		if(isStatic)
+			
 			def.type = BodyDef.BodyType.StaticBody;
 		else 
 			def.type = BodyDef.BodyType.DynamicBody;
@@ -156,10 +170,9 @@ public class PlayScreen implements Screen{
 		def.position.set(x / 16f, y / 16f);
 		def.fixedRotation = true;
 		pBody = world.createBody(def);
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(w / 2/ 16f, h / 2/ 16f);
+		CircleShape shape = new CircleShape();
+		shape.setRadius((float) 0.4);
 		pBody.createFixture(shape, 2.0f);
-		shape.dispose();
 		return pBody;
 	}
 	
@@ -170,18 +183,42 @@ public class PlayScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		FixtureDef fDef = new FixtureDef();
 		Body body;
+		CircleShape circleShape = new CircleShape();
 		
 		// where 2 is the id of object in tmx file which is "Wall"
-		for(MapObject object : tiledMap.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+		for(MapObject object : tiledMap.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 			
 			bDef.type = BodyDef.BodyType.StaticBody;
-			bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / 16f, (rectangle.getY() + rectangle.getHeight() / 2) / 16f);
+			bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / 32f, (rectangle.getY() + rectangle.getHeight() / 2) / 32f);
 			body = world.createBody(bDef);
-			shape.setAsBox(rectangle.getWidth() / 2 / 16f,  rectangle.getHeight() / 2 / 16f);
+			shape.setAsBox(rectangle.getWidth() / 2 / 32f,  rectangle.getHeight() / 2 / 32f);
 			fDef.shape = shape;
 			body.createFixture(fDef);
 		}
+		
+		  // pills
+       /* MapLayer pillLayer = tiledMap.getLayers().get("Pill"); // pill layer
+        for (MapObject mapObject : pillLayer.getObjects()) {
+            Rectangle rectangle = ((RectangleMapObject) mapObject).getRectangle();
+
+            float radius = 0.1f;
+          
+
+            bDef.type = BodyDef.BodyType.DynamicBody;
+            bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / 16f, (rectangle.getY() + rectangle.getHeight() / 2) / 16f);
+
+            circleShape.setRadius(radius);
+            fDef.shape = circleShape;
+            fDef.isSensor = true;
+            body = world.createBody(bDef);
+            body.createFixture(fDef);*/
+
+           // circleShape.dispose();
+
+        //}
+        
+        
 		
 	}
 
@@ -211,6 +248,8 @@ public class PlayScreen implements Screen{
 		world.dispose();
 		b2Renderer.dispose();
 		batch.dispose();
+		animationSheet.dispose();
+		
 	}
 	
 }
