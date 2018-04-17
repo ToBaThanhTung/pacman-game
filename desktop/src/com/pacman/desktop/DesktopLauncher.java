@@ -7,8 +7,8 @@ import com.pacman.PacMan;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1000;
-		config.height = 690;
+		config.width = 1024;
+		config.height = 720;
 		new LwjglApplication(new PacMan(), config);
 	}
 }

@@ -2,6 +2,7 @@ package com.pacman.ConvertMapToObject;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,34 +13,33 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.pacman.Asset;
+import com.pacman.Sprites.Pacman;
 import com.pacman.component.AnimationComponent;
 import com.pacman.component.MovementComponent;
 import com.pacman.component.PacmanComponent;
+import com.pacman.component.PillComponent;
 import com.pacman.component.TextureComponent;
-import com.pacman.component.TimeComponent;
+import com.pacman.component.StateComponent;
 import com.pacman.component.TransformComponent;
 import com.pacman.manager.Manager;
 
 public class BuildObject {
 	
-	// for physic world
 	
 	private World world;
 	private TiledMap tiledMap;
-	private Engine engine;
+	private PooledEngine engine;
+	private Texture im = new Texture("animation1.png");
 	
-	
-	// for animation
-	private Animation<TextureRegion> PacmanMoveLeft;
-	private Texture animationSheet;
-	private TextureRegion[][] tmp;
-	
-	public BuildObject(TiledMap tiledMap, World world, Engine engine){
+	public BuildObject(TiledMap tiledMap, World world, PooledEngine engine){
 		this.tiledMap = tiledMap;
         this.engine = engine;
         this.world = world;
@@ -47,12 +47,8 @@ public class BuildObject {
 	
 	
 	public void build() {
-		// load animation sheet as Texture
-				animationSheet = new Texture("animation.png");
-				
-				// temp 
-				tmp = TextureRegion.split(animationSheet, animationSheet.getWidth() / 19, animationSheet.getHeight() / 20);
-				
+		
+			
 				
 				// Wall which ID = 1 in title map
 				for(MapObject object : tiledMap.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
@@ -73,9 +69,51 @@ public class BuildObject {
 				}
 				
 				
+				// Pill layer
+				for(MapObject object : tiledMap.getLayers().get("Pill").getObjects().getByType(RectangleMapObject.class)) {
+					
+					Entity entity = engine.createEntity(); 
+					
+					Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+					checkPosition(rectangle);
+					
+					Body body;
+					FixtureDef fixtureDef = new FixtureDef();
+					CircleShape circleShape = new CircleShape();
+					BodyDef bDef = new BodyDef();
+					
+					bDef.type = BodyType.DynamicBody;
+					
+					bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2));
+					body = world.createBody(bDef);
+					circleShape.setRadius(0.2f);
+					fixtureDef.isSensor = true;
+					fixtureDef.shape = circleShape;
+					body.createFixture(fixtureDef);
+					circleShape.dispose();
+					
+					
+					PillComponent pillComponent = engine.createComponent(PillComponent.class);
+					TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
+					
+					
+					TransformComponent transformComponent = new TransformComponent((rectangle.getX() + rectangle.getWidth() / 2) , 
+																	(rectangle.getY() + rectangle.getHeight() / 2) );
+					
+					textureComponent.region = Asset.pill;
+					
+					
+					entity.add(pillComponent);
+					entity.add(textureComponent);
+					entity.add(transformComponent);
+					engine.addEntity(entity);
+					body.setUserData(body);
+				}
+				
+				
 				// Pacman layer
 				
-				for(MapObject object : tiledMap.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+				for(MapObject object : tiledMap.getLayers().get("Pacman").getObjects().getByType(RectangleMapObject.class)) {
 					
 					Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 					
@@ -92,7 +130,8 @@ public class BuildObject {
 	
 	private void createPacman(float x, float y) {
 		
-		// create physic body for pacman  (Dynamic, radius = 0.45)
+		Entity entity = engine.createEntity();
+		
 		Body pBody;
 		
 		BodyDef  def = new BodyDef();
@@ -101,98 +140,36 @@ public class BuildObject {
 		def.fixedRotation = true;
 		pBody = world.createBody(def);
 		CircleShape shape = new CircleShape();
-		shape.setRadius((float) 0.45f);
+		shape.setRadius((float) 0.43f);
 		pBody.createFixture(shape, 2.0f);
 		shape.dispose();
 		
 		
-		
-		
-		// animation
-		AnimationComponent animationComponent = new AnimationComponent();
-		Array<TextureRegion> frames = new Array<TextureRegion>();
-		Animation animation;
-		
-		
-		//
+		AnimationComponent animation = engine.createComponent(AnimationComponent.class);
+		StateComponent state = new StateComponent(PacmanComponent.MOVE_RIGHT);
 		PacmanComponent pacman = new PacmanComponent(pBody);
-		Entity entity = new Entity();
+		TransformComponent transform = new TransformComponent(x, y, 1);
+		
+		TextureComponent texture = engine.createComponent(TextureComponent.class);
+		
+		MovementComponent movement = new MovementComponent(pBody);
+		
+		
+		animation.ani.put(PacmanComponent.STAY,  Asset.pacmanStand);
+		animation.ani.put(PacmanComponent.MOVE_DOWN,  Asset.pacmanMoveDown);
+		animation.ani.put(PacmanComponent.MOVE_LEFT,  Asset.pacmanMoveLeft);	
+		animation.ani.put(PacmanComponent.MOVE_RIGHT,  Asset.pacmanMoveRight);
+		
+		
+		
 		entity.add(pacman);
-		entity.add(new TransformComponent(x, y, 1));
-		entity.add(new MovementComponent(pBody));
-		entity.add(new TimeComponent(PacmanComponent.STAY));
-		entity.add(new TextureComponent(tmp[0][18]));
+		entity.add(movement);
+		entity.add(transform);
+		entity.add(state);
+		entity.add(texture);
+		entity.add(animation);
 		
-		// when stand 
-		frames.add(tmp[0][18]);
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.STAY, animation);
-		frames.clear();
-		
-		// when stand right
-		frames.add(tmp[1][16]);
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.STAY_RIGHT, animation);
-		frames.clear();	
-		
-		// when stand down
-		frames.add(tmp[4][16]);
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.STAY_LEFT, animation);
-		frames.clear();		
-		
-
-		// when stand up
-		frames.add(tmp[10][16]);
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.STAY_UP, animation);
-		frames.clear();		
-		
-
-		// when stand left
-		frames.add(tmp[7][16]);
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.STAY_LEFT, animation);
-		frames.clear();		
-		
-		// when move right
-		for(int i = 0; i < 3; i++) {
-			frames.add(tmp[i][16]);
-		}
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.MOVE_RIGHT, animation);
-		frames.clear();
-
-		// when move down
-		for(int i = 3; i < 6; i++) {
-			frames.add(tmp[i][16]);
-		}
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.MOVE_DOWN, animation);
-		frames.clear();
-		
-		
-		// when move left
-		for(int i = 6; i < 9; i++) {
-			frames.add(tmp[i][16]);
-		}
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.MOVE_LEFT, animation);
-		frames.clear();
-		
-		
-		// when move up
-		for(int i = 9; i < 12; i++) {
-			frames.add(tmp[i][16]);
-		}
-		animation = new Animation(0.1f, frames);
-		animationComponent.ani.put(PacmanComponent.MOVE_UP, animation);
-		frames.clear();
-		
-		
-		entity.add(animationComponent);
 		engine.addEntity(entity);
-		pBody.setUserData(entity);
 	}
 	
 	private void checkPosition(Rectangle rectangle) {

@@ -15,7 +15,7 @@ public class PacmanComponent implements Component{
 	public static final int MOVE_LEFT = 7;
 	public static final int MOVE_RIGHT= 8;
 	
-	private final Body body;
+	public Body body;
 	
 	public int curState;
 	public int hp;

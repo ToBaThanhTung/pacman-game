@@ -14,6 +14,7 @@ public class PacMan extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		setScreen(new PlayScreen(this));
+		
 	}
 	@Override
 	
