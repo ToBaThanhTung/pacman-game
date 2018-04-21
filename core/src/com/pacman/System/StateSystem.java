@@ -1,4 +1,4 @@
-package System;
+package com.pacman.System;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -16,6 +16,7 @@ public class StateSystem extends IteratingSystem{
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
+		//System.out.println("check");
 		StateComponent stateComponent = scMapper.get(entity);
 		//stateComponent.increaseTime(deltaTime);
 	}

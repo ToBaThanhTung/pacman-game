@@ -1,5 +1,4 @@
-package System;
-
+package com.pacman.System;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -33,18 +32,22 @@ public class PacmanSystem extends IteratingSystem{
 		StateComponent stateComponent = stateM.get(entity);
 		MovementComponent movementComponent = mvM.get(entity);
 		Body body = movementComponent.body;
-		System.out.println(body.getPosition());
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+		//System.out.println(body.getPosition());
+		if(Gdx.input.isKeyJustPressed(Input.Keys.D)) {
 			body.setLinearVelocity(movementComponent.velocity, 0);
+			stateComponent.setState(pacman.MOVE_RIGHT);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.A)) {
 			body.setLinearVelocity(-movementComponent.velocity, 0);
+			stateComponent.setState(pacman.MOVE_LEFT);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.W)) {
 			body.setLinearVelocity(0, movementComponent.velocity);
+			stateComponent.setState(pacman.MOVE_UP);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.S)) {
 			body.setLinearVelocity(0, -movementComponent.velocity);
+			stateComponent.setState(pacman.MOVE_DOWN);
 		}
 	}
 	

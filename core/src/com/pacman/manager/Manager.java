@@ -7,6 +7,8 @@ public class Manager implements Disposable{
 	
 	public static final Manager manager = new Manager();
 	
+	public static final short PillBit = 1 << 2 ;
+	public static final short pacmanBit = 1 << 3;
 	public static final float PPM = 32f;
 	
 	

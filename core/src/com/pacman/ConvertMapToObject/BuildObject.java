@@ -1,5 +1,7 @@
 package com.pacman.ConvertMapToObject;
 
+import java.text.Bidi;
+
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
@@ -66,6 +68,7 @@ public class BuildObject {
 					fDef.shape = shape;
 					body.createFixture(fDef);
 					shape.dispose();
+					//body.setUserData();
 				}
 				
 				
@@ -85,29 +88,35 @@ public class BuildObject {
 					bDef.type = BodyType.DynamicBody;
 					
 					bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2));
+					
 					body = world.createBody(bDef);
+					
 					circleShape.setRadius(0.2f);
 					fixtureDef.isSensor = true;
 					fixtureDef.shape = circleShape;
+					fixtureDef.filter.categoryBits = Manager.PillBit ;
+					fixtureDef.filter.maskBits = Manager.pacmanBit;
 					body.createFixture(fixtureDef);
+					body.setUserData(entity);
 					circleShape.dispose();
 					
-					
+					//body.setUserData("Pill");
+					MovementComponent movementComponent = new MovementComponent(body);
 					PillComponent pillComponent = engine.createComponent(PillComponent.class);
 					TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
 					
 					
 					TransformComponent transformComponent = new TransformComponent((rectangle.getX() + rectangle.getWidth() / 2) , 
-																	(rectangle.getY() + rectangle.getHeight() / 2) );
-					
+																	(rectangle.getY() + rectangle.getHeight() / 2));
 					textureComponent.region = Asset.pill;
 					
-					
+					entity.add(movementComponent);
 					entity.add(pillComponent);
 					entity.add(textureComponent);
 					entity.add(transformComponent);
 					engine.addEntity(entity);
-					body.setUserData(body);
+				
+					
 				}
 				
 				
@@ -135,14 +144,22 @@ public class BuildObject {
 		Body pBody;
 		
 		BodyDef  def = new BodyDef();
+		//CircleShape circleShape = new CircleShape();
 		def.type = BodyDef.BodyType.DynamicBody;
 		def.position.set(x, y);
 		def.fixedRotation = true;
+		
 		pBody = world.createBody(def);
 		CircleShape shape = new CircleShape();
-		shape.setRadius((float) 0.43f);
-		pBody.createFixture(shape, 2.0f);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.filter.categoryBits = Manager.pacmanBit;
+		fixtureDef.filter.maskBits = Manager.PillBit;
+		shape.setRadius(0.43f);
+		fixtureDef.shape = shape;
+		
+		pBody.createFixture(fixtureDef);
 		shape.dispose();
+		
 		
 		
 		AnimationComponent animation = engine.createComponent(AnimationComponent.class);
@@ -155,7 +172,7 @@ public class BuildObject {
 		MovementComponent movement = new MovementComponent(pBody);
 		
 		
-		animation.ani.put(PacmanComponent.STAY,  Asset.pacmanStand);
+		animation.ani.put(PacmanComponent.MOVE_UP,  Asset.pacmanMoveUp);
 		animation.ani.put(PacmanComponent.MOVE_DOWN,  Asset.pacmanMoveDown);
 		animation.ani.put(PacmanComponent.MOVE_LEFT,  Asset.pacmanMoveLeft);	
 		animation.ani.put(PacmanComponent.MOVE_RIGHT,  Asset.pacmanMoveRight);
@@ -170,6 +187,7 @@ public class BuildObject {
 		entity.add(animation);
 		
 		engine.addEntity(entity);
+		pBody.setUserData(entity);
 	}
 	
 	private void checkPosition(Rectangle rectangle) {

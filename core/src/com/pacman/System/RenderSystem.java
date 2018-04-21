@@ -1,4 +1,4 @@
-package System;
+package com.pacman.System;
 
 import java.util.Comparator;
 

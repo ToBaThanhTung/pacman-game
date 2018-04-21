@@ -1,4 +1,4 @@
-package System;
+package com.pacman.System;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;

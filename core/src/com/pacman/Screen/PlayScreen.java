@@ -40,14 +40,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pacman.Asset;
 import com.pacman.PacMan;
 import com.pacman.ConvertMapToObject.BuildObject;
+import com.pacman.ConvertMapToObject.WorldContactListener;
 import com.pacman.component.StateComponent;
 
-import System.AnimationSystem;
-import System.MovementSystem;
-import System.PacmanSystem;
-import System.PillSystem;
-import System.RenderSystem;
-import System.StateSystem;
+import com.pacman.System.*;
+
 
 public class PlayScreen implements Screen{
 	
@@ -94,24 +91,28 @@ public class PlayScreen implements Screen{
 		
 		// load assets
 		Asset.load();
-		texture = new Texture("animation1.png");
-		pacmanTexture =  new TextureRegion(texture, 642, 115, 32, 32);
+		world = new World(new Vector2(0, 0), true);
+		world.setContactListener(new WorldContactListener());
+		b2Renderer = new Box2DDebugRenderer();
+	
+		engine = new PooledEngine();
 		
 		pacmanSystem = new PacmanSystem();
-		//pillSystem = new PillSystem();
+		pillSystem = new PillSystem();
 		movementSystem = new MovementSystem();
 		animationSystem = new AnimationSystem();
 		renderSystem = new RenderSystem(batch);
-		pillSystem = new PillSystem();
 		stateSystem = new StateSystem();
-		engine = new PooledEngine();
+		
+		engine.addSystem(pillSystem);
 		engine.addSystem(pacmanSystem);
 		engine.addSystem(movementSystem);
 		engine.addSystem(animationSystem);
 		engine.addSystem(renderSystem);
 		engine.addSystem(stateSystem);
-		world = new World(new Vector2(0, 0), true);
-		b2Renderer = new Box2DDebugRenderer();
+		
+		
+		
 		// load map
 		tiledMap = new TmxMapLoader().load("map/map2.tmx");
 		// load the map, set the unit scale to 1/32 (1 unit == 32 pixels)

@@ -39,9 +39,9 @@ public class Asset {
 		pacmanStand = new Animation(0.1f, new TextureRegion(items, 642, 3, 32, 32));
 		
 		pacmanMoveRight = new Animation(0.1f, new TextureRegion(items, 642, 3, 32, 32), new TextureRegion(items, 642, 43, 32, 32), new TextureRegion(items, 642, 77, 32, 32));
-		pacmanMoveDown = new Animation(0.1f, new TextureRegion(items, 642, 3, 32, 32), new TextureRegion(items, 642, 43, 32, 32), new TextureRegion(items, 642, 77, 32, 32));
-		pacmanMoveLeft = new Animation(0.1f, new TextureRegion(items, 642, 3, 32, 32), new TextureRegion(items, 642, 43, 32, 32), new TextureRegion(items, 642, 77, 32, 32));
-		pacmanMoveUp = new Animation(0.1f, new TextureRegion(items, 642, 3, 32, 32), new TextureRegion(items, 642, 43, 32, 32), new TextureRegion(items, 642, 77, 32, 32));
+		pacmanMoveDown = new Animation(0.1f, new TextureRegion(items, 642, 116, 32, 32), new TextureRegion(items, 642, 156, 32, 32), new TextureRegion(items, 642, 190, 32, 32));
+		pacmanMoveLeft = new Animation(0.1f, new TextureRegion(items, 642, 228, 32, 32), new TextureRegion(items, 642, 268, 32, 32), new TextureRegion(items, 642, 302, 32, 32));
+		pacmanMoveUp = new Animation(0.1f, new TextureRegion(items, 642, 340, 32, 32), new TextureRegion(items, 642, 380, 32, 32), new TextureRegion(items, 642, 422, 32, 32));
 		pill = new TextureRegion(items, 305, 195, 32, 32);
 		pacmanMoveRight.setPlayMode(PlayMode.LOOP_PINGPONG);
 		pacmanMoveLeft.setPlayMode(PlayMode.LOOP_PINGPONG);
