@@ -14,7 +14,6 @@ import com.pacman.manager.Manager;
 
 public class WorldContactListener implements ContactListener{
 	private ComponentMapper<PillComponent> pillM = ComponentMapper.getFor(PillComponent.class);
-	//private ComponentMapper<>
 	
 	
 	@Override

@@ -9,11 +9,12 @@ public class Manager implements Disposable{
 	
 	public static final short PillBit = 1 << 2 ;
 	public static final short pacmanBit = 1 << 3;
+	public static final short wallBit = 1 << 4;
 	public static final float PPM = 32f;
 	
 	
 	public boolean gameOver = false;
-	public int score = 0;
+	public static int score = 0;
 	public int highScore = 0;
 	
 	public int playAlive = 3;

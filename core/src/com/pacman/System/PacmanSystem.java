@@ -32,7 +32,8 @@ public class PacmanSystem extends IteratingSystem{
 		StateComponent stateComponent = stateM.get(entity);
 		MovementComponent movementComponent = mvM.get(entity);
 		Body body = movementComponent.body;
-		//System.out.println(body.getPosition());
+		
+		// input
 		if(Gdx.input.isKeyJustPressed(Input.Keys.D)) {
 			body.setLinearVelocity(movementComponent.velocity, 0);
 			stateComponent.setState(pacman.MOVE_RIGHT);

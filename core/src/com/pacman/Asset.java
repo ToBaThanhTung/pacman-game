@@ -46,10 +46,7 @@ public class Asset {
 		pacmanMoveRight.setPlayMode(PlayMode.LOOP_PINGPONG);
 		pacmanMoveLeft.setPlayMode(PlayMode.LOOP_PINGPONG);
 		pacmanMoveDown.setPlayMode(PlayMode.LOOP_PINGPONG);
-		pacmanMoveUp.setPlayMode(PlayMode.LOOP_PINGPONG);
-		
-		
-		
+		pacmanMoveUp.setPlayMode(PlayMode.LOOP_PINGPONG);		
 		
 	}
 	

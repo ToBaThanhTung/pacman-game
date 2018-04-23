@@ -1,47 +1,27 @@
 package com.pacman.Screen;
 
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.profiling.GL20Interceptor;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pacman.Asset;
 import com.pacman.PacMan;
 import com.pacman.ConvertMapToObject.BuildObject;
 import com.pacman.ConvertMapToObject.WorldContactListener;
-import com.pacman.component.StateComponent;
 
 import com.pacman.System.*;
 
@@ -66,6 +46,9 @@ public class PlayScreen implements Screen{
 	private PillSystem pillSystem;
 	private StateSystem stateSystem;
 	
+	// draw text
+	private BitmapFont font;
+	
 	// just for demo
 	
 	private TextureAtlas atlas; 
@@ -88,6 +71,9 @@ public class PlayScreen implements Screen{
 		//camera.setToOrtho(false, WIDTH / 2f, HEIGHT / 2f);
 		camera.update();
 		batch = new SpriteBatch();
+		
+		// load font
+		font = new BitmapFont();
 		
 		// load assets
 		Asset.load();
@@ -133,8 +119,11 @@ public class PlayScreen implements Screen{
 		engine.update(delta);
 		
 		
+		
 	
 		b2Renderer.render(world, camera.combined);
+		
+		
 		
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();

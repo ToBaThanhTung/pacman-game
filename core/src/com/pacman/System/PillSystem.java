@@ -11,6 +11,7 @@ import com.pacman.component.PillComponent;
 import com.pacman.component.StateComponent;
 import com.pacman.component.TextureComponent;
 import com.pacman.component.TransformComponent;
+import com.pacman.manager.Manager;
 
 public class PillSystem extends IteratingSystem{
 	
@@ -24,7 +25,6 @@ public class PillSystem extends IteratingSystem{
 	}
 	@Override
     protected void processEntity(Entity entity, float deltaTime) {
-		//System.out.println("cacccccccc");
         PillComponent pill = pillMapper.get(entity);
         MovementComponent movement = movMapper.get(entity);
 
@@ -32,8 +32,10 @@ public class PillSystem extends IteratingSystem{
 		
 		if(pill.isEat == true) {
 			body.getWorld().destroyBody(body);
-			System.out.println("pacman eat pill at: " + body.getPosition());
+			Manager.score += pill.smallPillScore;
 			getEngine().removeEntity(entity);
+			System.out.println("pacman eat pill at: " + body.getPosition());
+			System.out.println("Score: " + Manager.score);
 		}
 	}
 }

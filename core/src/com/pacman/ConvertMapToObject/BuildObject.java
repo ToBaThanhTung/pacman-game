@@ -64,6 +64,8 @@ public class BuildObject {
 					bDef.type = BodyDef.BodyType.StaticBody;
 					bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / Manager.PPM, (rectangle.getY() + rectangle.getHeight() / 2) / Manager.PPM);
 					body = world.createBody(bDef);
+					fDef.filter.categoryBits = Manager.wallBit;
+					fDef.filter.maskBits = Manager.pacmanBit;
 					shape.setAsBox(rectangle.getWidth() / 2 / Manager.PPM,  rectangle.getHeight() / 2 / Manager.PPM);
 					fDef.shape = shape;
 					body.createFixture(fDef);
@@ -153,7 +155,7 @@ public class BuildObject {
 		CircleShape shape = new CircleShape();
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.filter.categoryBits = Manager.pacmanBit;
-		fixtureDef.filter.maskBits = Manager.PillBit;
+		fixtureDef.filter.maskBits = Manager.PillBit | Manager.wallBit;
 		shape.setRadius(0.43f);
 		fixtureDef.shape = shape;
 		
