@@ -15,15 +15,18 @@ public class Manager implements Disposable{
 	
 	public boolean gameOver = false;
 	public static int score = 0;
+
+	public static final short ghostBit = 1 << 5;
 	public int highScore = 0;
 	
 	public int playAlive = 3;
 	
 	
 	public Vector2 pacmanSpawPos;
-	
+	public Vector2 ghostSpawPos;
 	public Manager() {
 		pacmanSpawPos = new Vector2();
+		ghostSpawPos = new Vector2();
 	}
 	
 	public void makeGameOver() {

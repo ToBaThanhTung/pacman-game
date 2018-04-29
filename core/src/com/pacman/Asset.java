@@ -16,11 +16,14 @@ public class Asset {
 	public static Animation pacmanMoveDown;
 	public static Animation	pacmanDie;
 	
-	public static Animation ghostMoveLeft;
-	public static Animation ghostMoveRight;
-	public static Animation ghostMoveUp;
-	public static Animation ghostMoveDown;
+	public static Animation ghostRedMoveLeft;
+	public static Animation ghostRedMoveRight;
+	public static Animation ghostRedMoveUp;
+	public static Animation ghostRedMoveDown;
 	public static Animation	ghostGaspOut;
+	
+	
+	
 	public static Texture eyeGhostLeft;
 	public static Texture eyeGhostRight;
 	public static Texture eyeGhostUp;
@@ -42,6 +45,19 @@ public class Asset {
 		pacmanMoveDown = new Animation(0.1f, new TextureRegion(items, 642, 116, 32, 32), new TextureRegion(items, 642, 156, 32, 32), new TextureRegion(items, 642, 190, 32, 32));
 		pacmanMoveLeft = new Animation(0.1f, new TextureRegion(items, 642, 228, 32, 32), new TextureRegion(items, 642, 268, 32, 32), new TextureRegion(items, 642, 302, 32, 32));
 		pacmanMoveUp = new Animation(0.1f, new TextureRegion(items, 642, 340, 32, 32), new TextureRegion(items, 642, 380, 32, 32), new TextureRegion(items, 642, 422, 32, 32));
+		
+		
+		ghostRedMoveRight = new Animation(0.1f, new TextureRegion(items, 490 , 3, 32, 32), new TextureRegion(items, 490, 43, 32, 32));
+		ghostRedMoveLeft = new Animation(0.1f, new TextureRegion(items, 490 , 156, 32, 32), new TextureRegion(items, 490, 190, 32, 32));
+		ghostRedMoveDown = new Animation(0.1f, new TextureRegion(items, 490 , 77, 32, 32), new TextureRegion(items, 490, 116, 32, 32));
+		ghostRedMoveUp = new Animation(0.1f, new TextureRegion(items, 490 , 228, 32, 32), new TextureRegion(items, 490, 268, 32, 32));
+		
+		ghostRedMoveDown.setPlayMode(PlayMode.LOOP_PINGPONG);
+		ghostRedMoveUp.setPlayMode(PlayMode.LOOP_PINGPONG);
+		ghostRedMoveLeft.setPlayMode(PlayMode.LOOP_PINGPONG);
+		ghostRedMoveRight.setPlayMode(PlayMode.LOOP_PINGPONG);
+		
+		
 		pill = new TextureRegion(items, 305, 195, 32, 32);
 		pacmanMoveRight.setPlayMode(PlayMode.LOOP_PINGPONG);
 		pacmanMoveLeft.setPlayMode(PlayMode.LOOP_PINGPONG);

@@ -1,30 +1,29 @@
 package com.pacman.ConvertMapToObject;
 
-import java.text.Bidi;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import com.pacman.Asset;
-import com.pacman.Sprites.Pacman;
+import com.pacman.Astar.Graph;
+import com.pacman.Astar.PathFinding;
 import com.pacman.component.AnimationComponent;
+import com.pacman.component.GhostComponent;
 import com.pacman.component.MovementComponent;
 import com.pacman.component.PacmanComponent;
 import com.pacman.component.PillComponent;
@@ -39,7 +38,8 @@ public class BuildObject {
 	private World world;
 	private TiledMap tiledMap;
 	private PooledEngine engine;
-	private Texture im = new Texture("animation1.png");
+	public boolean wall;
+	public PathFinding pathFinding;
 	
 	public BuildObject(TiledMap tiledMap, World world, PooledEngine engine){
 		this.tiledMap = tiledMap;
@@ -65,7 +65,7 @@ public class BuildObject {
 					bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / Manager.PPM, (rectangle.getY() + rectangle.getHeight() / 2) / Manager.PPM);
 					body = world.createBody(bDef);
 					fDef.filter.categoryBits = Manager.wallBit;
-					fDef.filter.maskBits = Manager.pacmanBit;
+					fDef.filter.maskBits = Manager.pacmanBit | Manager.ghostBit;
 					shape.setAsBox(rectangle.getWidth() / 2 / Manager.PPM,  rectangle.getHeight() / 2 / Manager.PPM);
 					fDef.shape = shape;
 					body.createFixture(fDef);
@@ -73,7 +73,39 @@ public class BuildObject {
 					//body.setUserData();
 				}
 				
+	
+				// Graph
+				MapLayers mapLayer = tiledMap.getLayers();
+				int mapH = ((TiledMapTileLayer) mapLayer.get(0)).getWidth();
+				int mapW = ((TiledMapTileLayer) mapLayer.get(0)).getHeight();
+				Graph aStarMap = new Graph(mapW, mapH);
+				QueryCallback queryCallback = new QueryCallback() {
+					
+					@Override
+					public boolean reportFixture(Fixture fixture) {
+						wall = fixture.getFilterData().categoryBits == Manager.wallBit;
+						return false;
+					}
+				};
 				
+				for(int y = 0; y < mapW; y++) {
+					for(int x = 0; x < mapH; x++) {
+						wall = false;
+						world.QueryAABB(queryCallback, x + 0.2f, y + 0.2f, x + 0.8f, y + 0.8f);
+						
+						if(wall) {
+							aStarMap.getNode(x, y).isWall = true;
+						}
+					}
+				}
+				Gdx.app.log("map", aStarMap.toString());
+				//pathFinding = new PathFinding(aStarMap);
+				/*for(int y = 0; y < mapH; y++) {
+					for(int x = 0; x < mapW; x++) {
+						System.out.println(aStarMap.getNode(x, y).toString());
+					}
+					System.out.println();
+				}*/
 				// Pill layer
 				for(MapObject object : tiledMap.getLayers().get("Pill").getObjects().getByType(RectangleMapObject.class)) {
 					
@@ -137,7 +169,67 @@ public class BuildObject {
 					createPacman(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
 					
 				}
+				
+				// Ghost layer
+				for(MapObject object : tiledMap.getLayers().get("Ghost").getObjects().getByType(RectangleMapObject.class)) {
+					Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+					checkPosition(rectangle);
+					Manager.manager.ghostSpawPos.set(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
+					createGhost(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
+				}
+				
 	}
+	
+	private void createGhost(float x, float y){
+		Entity entity = engine.createEntity();
+		Body pBody;
+		
+		BodyDef  def = new BodyDef();
+		def.type = BodyDef.BodyType.DynamicBody;
+		def.position.set(x, y);
+		def.fixedRotation = true;
+		
+		pBody = world.createBody(def);
+		CircleShape shape = new CircleShape();
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.filter.categoryBits = Manager.ghostBit;
+		fixtureDef.filter.maskBits = Manager.pacmanBit | Manager.wallBit;
+		shape.setRadius(0.43f);
+		fixtureDef.shape = shape;
+		
+		pBody.createFixture(fixtureDef);
+		shape.dispose();
+		
+		
+		
+		AnimationComponent animation = engine.createComponent(AnimationComponent.class);
+		StateComponent state = new StateComponent(GhostComponent.MOVE_DOWN);
+		GhostComponent ghost = new GhostComponent(pBody);
+		TransformComponent transform = new TransformComponent(x, y, 1);
+		
+		TextureComponent texture = engine.createComponent(TextureComponent.class);
+		
+		MovementComponent movement = new MovementComponent(pBody);
+		
+		
+		animation.ani.put(GhostComponent.MOVE_LEFT,  Asset.ghostRedMoveLeft);
+		animation.ani.put(GhostComponent.MOVE_RIGHT,  Asset.ghostRedMoveRight);
+		animation.ani.put(GhostComponent.MOVE_UP,  Asset.ghostRedMoveUp);
+		animation.ani.put(GhostComponent.MOVE_DOWN,  Asset.ghostRedMoveDown);
+		
+		
+		entity.add(ghost);
+		entity.add(movement);
+		entity.add(transform);
+		entity.add(state);
+		entity.add(texture);
+		entity.add(animation);
+		
+		engine.addEntity(entity);
+		pBody.setUserData(entity);
+		
+	}
+	
 	
 	private void createPacman(float x, float y) {
 		
@@ -146,7 +238,6 @@ public class BuildObject {
 		Body pBody;
 		
 		BodyDef  def = new BodyDef();
-		//CircleShape circleShape = new CircleShape();
 		def.type = BodyDef.BodyType.DynamicBody;
 		def.position.set(x, y);
 		def.fixedRotation = true;
@@ -155,7 +246,7 @@ public class BuildObject {
 		CircleShape shape = new CircleShape();
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.filter.categoryBits = Manager.pacmanBit;
-		fixtureDef.filter.maskBits = Manager.PillBit | Manager.wallBit;
+		fixtureDef.filter.maskBits = Manager.PillBit | Manager.wallBit | Manager.ghostBit;
 		shape.setRadius(0.43f);
 		fixtureDef.shape = shape;
 		

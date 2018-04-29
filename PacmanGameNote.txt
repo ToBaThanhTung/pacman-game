@@ -1,0 +1,11 @@
+									--------PAC-MAN GAME---------
+	--- we are using libGDX framework and entity component system to built this game
+	---talking about ECS:
+		--Component: the class has no method and only capable of storing data
+			+ Ex: position(x, y), physic(body), health(value)...
+		--Entity: is something that exist in game world, an entity is little more than a list of component. most impementations an entity is a unique ID, and all components that make up an entity will be tagged with that ID.
+			+ Ex: Ball(pos, sprite, physic, state)
+		--The System: Game logic is the job of the systems. A system operates on related groups of components. Each system will be updated once per frame in a logical order.
+			+ Ex: MovementSystem(Pos, velocity)
+
+		

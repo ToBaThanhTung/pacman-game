@@ -45,6 +45,7 @@ public class PlayScreen implements Screen{
 	private RenderSystem renderSystem;
 	private PillSystem pillSystem;
 	private StateSystem stateSystem;
+	private GhostSystem ghostSystem;
 	
 	// draw text
 	private BitmapFont font;
@@ -68,7 +69,6 @@ public class PlayScreen implements Screen{
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(WIDTH, HEIGHT, camera);
 		camera.translate(WIDTH / 2, HEIGHT / 2);
-		//camera.setToOrtho(false, WIDTH / 2f, HEIGHT / 2f);
 		camera.update();
 		batch = new SpriteBatch();
 		
@@ -77,6 +77,7 @@ public class PlayScreen implements Screen{
 		
 		// load assets
 		Asset.load();
+		
 		world = new World(new Vector2(0, 0), true);
 		world.setContactListener(new WorldContactListener());
 		b2Renderer = new Box2DDebugRenderer();
@@ -87,16 +88,17 @@ public class PlayScreen implements Screen{
 		pillSystem = new PillSystem();
 		movementSystem = new MovementSystem();
 		animationSystem = new AnimationSystem();
-		renderSystem = new RenderSystem(batch);
 		stateSystem = new StateSystem();
+		ghostSystem = new GhostSystem();
+		renderSystem = new RenderSystem(batch);
 		
 		engine.addSystem(pillSystem);
 		engine.addSystem(pacmanSystem);
+		engine.addSystem(ghostSystem);
 		engine.addSystem(movementSystem);
 		engine.addSystem(animationSystem);
-		engine.addSystem(renderSystem);
 		engine.addSystem(stateSystem);
-		
+		engine.addSystem(renderSystem);
 		
 		
 		// load map
