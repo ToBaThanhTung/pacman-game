@@ -1,5 +1,6 @@
 package com.pacman.manager;
 
+import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -20,6 +21,8 @@ public class Manager implements Disposable{
 	public int highScore = 0;
 	
 	public int playAlive = 3;
+	
+	public Vector2 pacmanLocation;
 	
 	
 	public Vector2 pacmanSpawPos;

@@ -23,7 +23,7 @@ public class MyGraph implements IndexedGraph<Node>{
 
 	@Override
 	public int getNodeCount() {
-		return map.getHeight() * map.getHeight();
+		return map.getHeight() * map.getWidth();
 	}
 	
 }

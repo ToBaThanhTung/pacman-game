@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.pacman.Astar.PathFinding;
 
 public class Asset {
 	
@@ -31,7 +32,7 @@ public class Asset {
 	
 	public static TextureRegion pill;
 	
-	
+	public static PathFinding finding;
 	
 	
 	

@@ -17,7 +17,7 @@ public class PacmanComponent implements Component{
 	
 	public PacmanComponent(Body b) {
 		body = b;
-		curState = 0;
+		curState = STAY;
 		
 	}
 	

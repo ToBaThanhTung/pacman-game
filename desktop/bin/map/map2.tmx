@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="35" height="15" tilewidth="32" tileheight="32" infinite="0" nextobjectid="429">
- <layer name="Tile Layer 1" width="35" height="15">
+ <layer name="Tile Layer 1" width="35" height="15" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -50,9 +50,6 @@
  </objectgroup>
  <objectgroup name="Ghost">
   <object id="424" x="512" y="320" width="32" height="32"/>
-  <object id="426" x="928" y="64" width="32" height="32"/>
-  <object id="427" x="128" y="64" width="32" height="32"/>
-  <object id="428" x="128" y="384" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Pill" visible="0">
   <object id="82" x="64" y="64" width="32" height="32"/>

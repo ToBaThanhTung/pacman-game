@@ -99,6 +99,7 @@ public class BuildObject {
 					}
 				}
 				Gdx.app.log("map", aStarMap.toString());
+				Asset.finding = new PathFinding(aStarMap);
 				//pathFinding = new PathFinding(aStarMap);
 				/*for(int y = 0; y < mapH; y++) {
 					for(int x = 0; x < mapW; x++) {
@@ -194,7 +195,7 @@ public class BuildObject {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.filter.categoryBits = Manager.ghostBit;
 		fixtureDef.filter.maskBits = Manager.pacmanBit | Manager.wallBit;
-		shape.setRadius(0.43f);
+		shape.setRadius(0.4f);
 		fixtureDef.shape = shape;
 		
 		pBody.createFixture(fixtureDef);
@@ -263,7 +264,7 @@ public class BuildObject {
 		TextureComponent texture = engine.createComponent(TextureComponent.class);
 		
 		MovementComponent movement = new MovementComponent(pBody);
-		
+		Manager.manager.pacmanLocation = pacman.getBody().getPosition();
 		
 		animation.ani.put(PacmanComponent.MOVE_UP,  Asset.pacmanMoveUp);
 		animation.ani.put(PacmanComponent.MOVE_DOWN,  Asset.pacmanMoveDown);
