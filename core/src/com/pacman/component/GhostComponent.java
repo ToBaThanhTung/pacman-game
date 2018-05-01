@@ -15,10 +15,11 @@ public class GhostComponent implements Component{
 	
 	public int curState;
 	public int hp;
-	
+	public float time;
 	public GhostComponent(Body b) {
 		body = b;
 		curState = MOVE_RIGHT;
+		time = 0;
 	}
 	
 	public Body getBody() {

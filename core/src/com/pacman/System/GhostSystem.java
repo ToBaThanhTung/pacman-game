@@ -24,9 +24,13 @@ public class GhostSystem extends IteratingSystem{
 	private final ComponentMapper<MovementComponent> mvM = ComponentMapper.getFor(MovementComponent.class);
 	private final ComponentMapper<StateComponent> stateM = ComponentMapper.getFor(StateComponent.class);
 	
-	private final Vector2 target = new Vector2(); 
+	private	Vector2 curPos = new Vector2();
+	private  Vector2 target = new Vector2(); 
+	@SuppressWarnings("unchecked")
 	public GhostSystem() {
+		
 		super(Family.all(GhostComponent.class, MovementComponent.class, StateComponent.class).get());
+		
 	}
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
@@ -34,29 +38,58 @@ public class GhostSystem extends IteratingSystem{
 		StateComponent stateComponent = stateM.get(entity);
 		MovementComponent movementComponent = mvM.get(entity);
 		Body body = movementComponent.body;
+		//Graph map = Asset.finding.map;	
+       
 		
-		Graph map = Asset.finding.map;
-		//float x = (Manager.manager.pacmanLocation.x + map.getWidth() / 2);
-        //float y = (Manager.manager.pacmanLocation.y + map.getHeight() / 2);
-		
-      /*  do {
-            x ++;
-            y ++;
-            x = x > map.getWidth() ? x - map.getWidth() : x;
-            y = y > map.getHeight() ? y - map.getHeight() : y;
-        } while (map.getNode(MathUtils.floor(x), MathUtils.floor(y)).isWall);
-*/
-       // target.set(x, y);
+		// target.set(x, y);
        // System.out.println(target.toString());
         //Gdx.app.log("pos pacman",Manager.manager.pacmanLocation.toString());
-      //  Gdx.app.log("ghost cur pos", ghost.getBody().getPosition().toString());
-        Node node = Asset.finding.findNextNode(ghost.getBody().getPosition(), Manager.manager.pacmanLocation);
-        Gdx.app.log("ghost move node", node.toString());
-       // body.applyLinearImpulse(impulseX, impulseY, pointX, pointY, wake);
-        
-    
+       ghost.time += deltaTime;
+
+		if (ghost.time > 0.2f) {
+		curPos = ghost.getBody().getPosition();
+		int targetX = MathUtils.floor(Manager.manager.pacmanLocation.x);
+		int targetY = MathUtils.floor(Manager.manager.pacmanLocation.y);
+		int curPosX = MathUtils.floor(ghost.getBody().getPosition().x);
+		int curPosY = MathUtils.floor(ghost.getBody().getPosition().y);
+		Node node;
+		target.set(targetX, targetY);
+		curPos.set(curPosX, curPosY);
 		
-		// just test
+			node = Asset.finding.findNextNode(curPos, target);
+		
+		 Gdx.app.log("ghost cur pos", curPos.toString());
+        Gdx.app.log("ghost move node", node.toString());
+		 
+        
+        
+        
+		if((node.x - curPos.x) * movementComponent.velocity > 0) {
+			System.out.println("go R");
+			body.setLinearVelocity(movementComponent.velocity, 0);
+			stateComponent.setState(ghost.MOVE_RIGHT);
+		}
+		
+		else if((node.x - curPos.x) * movementComponent.velocity < 0) {
+			System.out.println("go L");
+			body.setLinearVelocity(-movementComponent.velocity, 0);
+			stateComponent.setState(ghost.MOVE_LEFT);
+		}
+		else if((node.y - curPos.y) * movementComponent.velocity > 0) {
+			System.out.println("go Down");
+			body.setLinearVelocity(0, movementComponent.velocity);
+			stateComponent.setState(ghost.MOVE_UP);
+		}
+		else if ((node.y - curPos.y) * movementComponent.velocity  < 0) {
+			System.out.println("go Up");
+			body.setLinearVelocity(0, -movementComponent.velocity);
+			stateComponent.setState(ghost.MOVE_DOWN);
+		}
+		ghost.time = 0;
+		}
+		
+		
+		// just test movement
 		if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
 			body.setLinearVelocity(movementComponent.velocity, 0);
 			stateComponent.setState(ghost.MOVE_RIGHT);

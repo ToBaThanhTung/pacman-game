@@ -7,9 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.World;
 import com.pacman.component.MovementComponent;
 import com.pacman.component.PacmanComponent;
 import com.pacman.component.StateComponent;
+import com.pacman.manager.Manager;
 
 public class PacmanSystem extends IteratingSystem{
 	
@@ -18,7 +22,7 @@ public class PacmanSystem extends IteratingSystem{
 	private final ComponentMapper<StateComponent> stateM = ComponentMapper.getFor(StateComponent.class);
 	
 	private final Vector2 velocity = new Vector2(); 
-	
+	private boolean canMove;
 	public PacmanSystem() {
 		super(Family.all(PacmanComponent.class, MovementComponent.class, StateComponent.class).get());
 		
@@ -50,7 +54,28 @@ public class PacmanSystem extends IteratingSystem{
 			body.setLinearVelocity(0, -movementComponent.velocity);
 			stateComponent.setState(pacman.MOVE_DOWN);
 		}
+		
+		
 	}
+	
+	/*private void checkMove(Body body) {
+		canMove = true;
+		World world = body.getWorld();
+		
+		RayCastCallback rayCastCallback = new RayCastCallback() {
+			
+			@Override
+			public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+				if(fixture.getFilterData().categoryBits == Manager.wallBit) {
+					canMove = false;
+				}
+				return 0;
+			}
+		};
+		
+		world.rayCast(rayCastCallback, , point2);
+		
+	}*/
 	
 	
 }

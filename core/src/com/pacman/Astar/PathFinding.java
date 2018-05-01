@@ -49,10 +49,10 @@ public class PathFinding {
        
         Node sourceNode = map.getNode(sourceX, sourceY);
         Node targetNode = map.getNode(targetX, targetY);
-        Gdx.app.log("cur Node", sourceNode.toString()+ "  " + targetNode.toString());
+        //Gdx.app.log("cur Node", sourceNode.toString()+ "  " + targetNode.toString());
         connectionPath.clear();
         pathFinder.searchConnectionPath(sourceNode, targetNode, heuristic, connectionPath);
-        System.out.println(connectionPath.getCount());
+        //System.out.println("distance: " + connectionPath.getCount());
         return connectionPath.getCount() == 0 ? null : connectionPath.get(0).getToNode();
     }
 	
