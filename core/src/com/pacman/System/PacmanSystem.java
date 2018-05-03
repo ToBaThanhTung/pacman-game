@@ -15,7 +15,7 @@ import com.pacman.component.PacmanComponent;
 import com.pacman.component.StateComponent;
 import com.pacman.manager.Manager;
 
-public class PacmanSystem extends IteratingSystem{
+public class PacmanSystem extends IteratingSystem {
 	
 	private final ComponentMapper<PacmanComponent> pacM = ComponentMapper.getFor(PacmanComponent.class);
 	private final ComponentMapper<MovementComponent> mvM = ComponentMapper.getFor(MovementComponent.class);
@@ -23,6 +23,7 @@ public class PacmanSystem extends IteratingSystem{
 	
 	private final Vector2 velocity = new Vector2(); 
 	private boolean canMove;
+	@SuppressWarnings("unchecked")
 	public PacmanSystem() {
 		super(Family.all(PacmanComponent.class, MovementComponent.class, StateComponent.class).get());
 		
@@ -36,6 +37,18 @@ public class PacmanSystem extends IteratingSystem{
 		StateComponent stateComponent = stateM.get(entity);
 		MovementComponent movementComponent = mvM.get(entity);
 		Body body = movementComponent.body;
+		
+		if(pacman.isDie == true) {
+			stateComponent.setState(pacman.DIE);
+		//	System.out.println("CHECKKKKKKKKKK");
+			pacman.pacmanDieTime += deltaTime;
+		}
+		if(pacman.pacmanDieTime > 1.1f) {
+			pacman.isDie = false;
+			stateComponent.setState(pacman.STAY);
+			pacman.body.setTransform(Manager.manager.pacmanSpawPos, 0);
+			pacman.pacmanDieTime = 0;
+		}
 		
 		// input
 		if(Gdx.input.isKeyJustPressed(Input.Keys.D)) {

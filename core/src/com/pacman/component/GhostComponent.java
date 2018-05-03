@@ -16,10 +16,12 @@ public class GhostComponent implements Component{
 	public int curState;
 	public int hp;
 	public float time;
+	public boolean isScareMode;
 	public GhostComponent(Body b) {
 		body = b;
-		curState = MOVE_RIGHT;
+		curState = STAY;
 		time = 0;
+		isScareMode = false;
 	}
 	
 	public Body getBody() {

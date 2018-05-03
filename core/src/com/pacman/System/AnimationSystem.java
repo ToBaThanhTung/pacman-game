@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.pacman.component.AnimationComponent;
@@ -16,6 +15,7 @@ public class AnimationSystem extends IteratingSystem{
 	private final ComponentMapper<AnimationComponent> aniM = ComponentMapper.getFor(AnimationComponent.class);
 	private final ComponentMapper<StateComponent> stateM = ComponentMapper.getFor(StateComponent.class);
 	
+	@SuppressWarnings("unchecked")
 	public AnimationSystem() {
 		super(Family.all(TextureComponent.class, AnimationComponent.class, StateComponent.class).get());
 	}

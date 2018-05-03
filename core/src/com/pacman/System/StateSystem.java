@@ -19,6 +19,8 @@ public class StateSystem extends IteratingSystem{
 		//System.out.println("check");
 		StateComponent stateComponent = scMapper.get(entity);
 		//stateComponent.increaseTime(deltaTime);
+		
+		//System.out.println(stateComponent.getState());
 	}
 	
 	

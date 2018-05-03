@@ -47,6 +47,10 @@ public class Asset {
 		pacmanMoveLeft = new Animation(0.1f, new TextureRegion(items, 642, 228, 32, 32), new TextureRegion(items, 642, 268, 32, 32), new TextureRegion(items, 642, 302, 32, 32));
 		pacmanMoveUp = new Animation(0.1f, new TextureRegion(items, 642, 340, 32, 32), new TextureRegion(items, 642, 380, 32, 32), new TextureRegion(items, 642, 422, 32, 32));
 		
+		pacmanDie = new Animation(0.1f,new TextureRegion(items, 264, 3, 32, 32), new TextureRegion(items, 264, 43, 32, 32), new TextureRegion(items, 264, 77, 32, 32), 
+						new TextureRegion(items, 264, 116, 32, 32), new TextureRegion(items, 264, 156, 32, 32), new TextureRegion(items, 264, 190, 32, 32), 
+						new TextureRegion(items, 264, 228, 32, 32), new TextureRegion(items, 264, 268, 32, 32), new TextureRegion(items, 264, 302, 32, 32),
+						new TextureRegion(items, 264, 340, 32, 32), new TextureRegion(items, 264, 380, 32, 32));
 		
 		ghostRedMoveRight = new Animation(0.1f, new TextureRegion(items, 490 , 3, 32, 32), new TextureRegion(items, 490, 43, 32, 32));
 		ghostRedMoveLeft = new Animation(0.1f, new TextureRegion(items, 490 , 156, 32, 32), new TextureRegion(items, 490, 190, 32, 32));
@@ -64,6 +68,7 @@ public class Asset {
 		pacmanMoveLeft.setPlayMode(PlayMode.LOOP_PINGPONG);
 		pacmanMoveDown.setPlayMode(PlayMode.LOOP_PINGPONG);
 		pacmanMoveUp.setPlayMode(PlayMode.LOOP_PINGPONG);		
+		pacmanDie.setPlayMode(PlayMode.LOOP_PINGPONG);
 		
 	}
 	

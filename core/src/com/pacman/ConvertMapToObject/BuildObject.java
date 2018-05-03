@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -123,7 +124,7 @@ public class BuildObject {
 					bDef.type = BodyType.DynamicBody;
 					
 					bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2));
-					
+					Manager.manager.ghostSpawPos.set((rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2));
 					body = world.createBody(bDef);
 					
 					circleShape.setRadius(0.2f);
@@ -257,8 +258,9 @@ public class BuildObject {
 		
 		
 		AnimationComponent animation = engine.createComponent(AnimationComponent.class);
-		StateComponent state = new StateComponent(PacmanComponent.MOVE_RIGHT);
+		
 		PacmanComponent pacman = new PacmanComponent(pBody);
+		StateComponent state = new StateComponent(pacman.curState);
 		TransformComponent transform = new TransformComponent(x, y, 1);
 		
 		TextureComponent texture = engine.createComponent(TextureComponent.class);
@@ -270,7 +272,8 @@ public class BuildObject {
 		animation.ani.put(PacmanComponent.MOVE_DOWN,  Asset.pacmanMoveDown);
 		animation.ani.put(PacmanComponent.MOVE_LEFT,  Asset.pacmanMoveLeft);	
 		animation.ani.put(PacmanComponent.MOVE_RIGHT,  Asset.pacmanMoveRight);
-		
+		animation.ani.put(PacmanComponent.STAY,  Asset.pacmanStand);
+		animation.ani.put(PacmanComponent.DIE,  Asset.pacmanDie);
 		
 		
 		entity.add(pacman);
