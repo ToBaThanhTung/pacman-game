@@ -21,19 +21,22 @@ public class Manager implements Disposable{
 	public int highScore = 0;
 	
 	public int playAlive = 3;
-	
+	public float invi = 5f;
+	public boolean isInvi;
 	public Vector2 pacmanLocation;
-	
+	public boolean isGhostScare;
 	
 	public Vector2 pacmanSpawPos;
 	public Vector2 ghostSpawPos;
 	public Manager() {
 		pacmanSpawPos = new Vector2();
 		ghostSpawPos = new Vector2();
+		isInvi = false;
 	}
 	
 	public void makeGameOver() {
 		gameOver = true;
+		
 	}
 	
 	

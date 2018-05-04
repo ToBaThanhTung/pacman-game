@@ -44,6 +44,18 @@ public class GhostSystem extends IteratingSystem {
 		
 		ghost.ghostEntity.update(deltaTime);
 		stateComponent.setState(ghost.curState);
+		if(Manager.manager.isGhostScare) {
+			ghost.isScareMode = true;
+		}
+		
+		if(ghost.isScareMode) {
+			System.out.println("ghost scare state!!!!!");
+			ghost.scareTime += deltaTime;
+			if(ghost.scareTime >= 10f) {
+				ghost.scareTime = 0;
+				ghost.isScareMode = false;
+			}
+		}
 		
 		/*ghost.time += deltaTime;
 
@@ -90,7 +102,7 @@ public class GhostSystem extends IteratingSystem {
 */
 		// just test movement
 		if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-			body.setLinearVelocity(movementComponent.velocity, 0);
+
 			stateComponent.setState(ghost.MOVE_RIGHT);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {

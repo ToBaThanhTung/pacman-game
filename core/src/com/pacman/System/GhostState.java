@@ -26,8 +26,15 @@ public enum GhostState implements State<GhostEntity>{
 				System.out.println("hit wall");
 				changeDirection(entity, GhostComponent.MOVE_UP);
 			}
-			if(nearPlayer(entity, 6f)) {
-				entity.state.changeState(GhostState.HUNTER);
+			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if(entity.ghostComponent.isScareMode)
+					entity.ghostComponent.curState = GhostComponent.SCARE;
+				else
+					entity.state.changeState(GhostState.HUNTER);
+			}
+			if(entity.ghostComponent.isScareMode) {
+				entity.ghostComponent.curState = GhostComponent.SCARE;
+				
 			}
 		}		
 	},
@@ -41,8 +48,14 @@ public enum GhostState implements State<GhostEntity>{
 				System.out.println("hit wall");
 				changeDirection(entity, GhostComponent.MOVE_DOWN);
 			}
-			if(nearPlayer(entity, 6f)) {
-				entity.state.changeState(GhostState.HUNTER);
+			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if(entity.ghostComponent.isScareMode)
+					entity.ghostComponent.curState = GhostComponent.SCARE;
+				else
+					entity.state.changeState(GhostState.HUNTER);
+			}
+			if(entity.ghostComponent.isScareMode) {
+				entity.ghostComponent.curState = GhostComponent.SCARE;
 			}
 		}		
 	},
@@ -57,8 +70,14 @@ public enum GhostState implements State<GhostEntity>{
 				System.out.println("hit wall");
 				changeDirection(entity, GhostComponent.MOVE_LEFT);
 			}
-			if(nearPlayer(entity, 6f)) {
-				entity.state.changeState(GhostState.HUNTER);
+			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if(entity.ghostComponent.isScareMode)
+					entity.ghostComponent.curState = GhostComponent.SCARE;
+				else
+					entity.state.changeState(GhostState.HUNTER);
+			}
+			if(entity.ghostComponent.isScareMode) {
+				entity.ghostComponent.curState = GhostComponent.SCARE;
 			}
 		}		
 	},
@@ -72,8 +91,15 @@ public enum GhostState implements State<GhostEntity>{
 				System.out.println("hit wall");
 				changeDirection(entity, GhostComponent.MOVE_RIGHT);
 			}
-			if(nearPlayer(entity, 6f)) {
-				entity.state.changeState(GhostState.HUNTER);
+			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if(entity.ghostComponent.isScareMode)
+					entity.ghostComponent.curState = GhostComponent.SCARE;
+				else
+					entity.state.changeState(GhostState.HUNTER);
+			}
+			if(entity.ghostComponent.isScareMode) {
+				entity.ghostComponent.curState = GhostComponent.SCARE;
+				System.out.println("checkkkkk!!!!!!!!!!!!!!!!!!!");
 			}
 			
 		}		
@@ -81,12 +107,12 @@ public enum GhostState implements State<GhostEntity>{
 	HUNTER(){
 		@Override
 		public void update(GhostEntity entity) {
-			System.out.println("hunter mod");
+			//System.out.println("hunter mod");
 			
 			
 			Vector2 curPos = new Vector2();
 			Vector2 target = new Vector2();
-
+			
 			if (entity.time > 0.1f) {
 				curPos = entity.getPos();
 				int targetX = MathUtils.floor(Manager.manager.pacmanLocation.x);
@@ -123,20 +149,34 @@ public enum GhostState implements State<GhostEntity>{
 						entity.ghostComponent.getBody().setLinearVelocity(0, -entity.velocity);
 						entity.ghostComponent.curState = GhostComponent.MOVE_UP;
 					}
-					entity.time = 0;
-				}
 				
-				if(!nearPlayer(entity, 6f)) {
-					changeDirection(entity, 0);
 				}
+				else {
+					changeDirection(entity, randDirection(5));
+				}
+				entity.time = 0;
+			
 			}	
+			if(!nearPlayer(entity, 6f)) {
+				changeDirection(entity, 0);
+			}
 		}
+	},
+	SCARE(){
+		@Override
+		public void update(GhostEntity entity) {
+			entity.ghostComponent.curState = GhostComponent.SCARE;
+			
+		}
+		
 	};
 	
 	private boolean isWall;
 	private Vector2 V1 = new Vector2();
 	private Vector2 V2 = new Vector2();
 	private java.util.Random random ;
+	
+	
 	
 	 protected boolean nearPlayer(GhostEntity entity, float distance) {
 	        if (Manager.manager.pacmanLocation == null) {
@@ -151,7 +191,6 @@ public enum GhostState implements State<GhostEntity>{
 	protected int randDirection(int preDirection) {
 		random = new java.util.Random();
 		int rand = random.nextInt(4);
-		//System.out.println("without: " + rand);
 		while(rand == preDirection) {
 			rand = random.nextInt(4);
 		}
@@ -224,7 +263,7 @@ public enum GhostState implements State<GhostEntity>{
 	
 	@Override
 	public void enter(GhostEntity entity) {
-		entity.ghostComponent.getBody().setLinearVelocity(0, 0);
+		//entity.ghostComponent.getBody().setLinearVelocity(0, 0);
 		
 	}
 	@Override

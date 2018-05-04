@@ -27,7 +27,7 @@ public class GhostEntity implements Telegraph{
 	}
 	
 	public void update(float delta) {
-		this.time += delta;
+		time += delta;
 		state.update();
 	}
 

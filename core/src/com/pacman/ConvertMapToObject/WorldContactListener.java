@@ -35,12 +35,15 @@ public class WorldContactListener implements ContactListener{
 				Entity entity = (Entity) fb.getBody().getUserData();
 				PillComponent pillComponent =  pillM.get(entity);
 				pillComponent.isEat = true;
+				GhostComponent ghost = ghostM.get(entity);
+				Manager.manager.isGhostScare = pillComponent.isBig;
 			}
 			else if (fb.getFilterData().categoryBits == Manager.pacmanBit) {
                 Body body = fa.getBody();
                 Entity entity = (Entity) body.getUserData();
                 PillComponent pill = pillM.get(entity);
                 pill.isEat = true;
+                Manager.manager.isGhostScare = pill.isBig;
 			}
 		}
 		

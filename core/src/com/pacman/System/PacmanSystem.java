@@ -21,8 +21,6 @@ public class PacmanSystem extends IteratingSystem {
 	private final ComponentMapper<MovementComponent> mvM = ComponentMapper.getFor(MovementComponent.class);
 	private final ComponentMapper<StateComponent> stateM = ComponentMapper.getFor(StateComponent.class);
 	
-	private final Vector2 velocity = new Vector2(); 
-	private boolean canMove;
 	@SuppressWarnings("unchecked")
 	public PacmanSystem() {
 		super(Family.all(PacmanComponent.class, MovementComponent.class, StateComponent.class).get());
@@ -39,12 +37,13 @@ public class PacmanSystem extends IteratingSystem {
 		Body body = movementComponent.body;
 		
 		if(pacman.isDie == true) {
-			stateComponent.setState(pacman.DIE);
+			stateComponent.setState(PacmanComponent.DIE);
 			pacman.pacmanDieTime += deltaTime;
+			Manager.manager.isInvi = true;                                                                                                            
 		}
 		if(pacman.pacmanDieTime > 1.1f) {
 			pacman.isDie = false; 
-			stateComponent.setState(pacman.STAY);
+			stateComponent.setState(PacmanComponent.STAY);
 			pacman.body.setTransform(Manager.manager.pacmanSpawPos, 0);
 			pacman.pacmanDieTime = 0;
 			pacman.body.setLinearVelocity(0, 0);
@@ -53,22 +52,34 @@ public class PacmanSystem extends IteratingSystem {
 		// input
 		if(Gdx.input.isKeyJustPressed(Input.Keys.D)) {
 			body.setLinearVelocity(movementComponent.velocity, 0);
-			stateComponent.setState(pacman.MOVE_RIGHT);
+			stateComponent.setState(PacmanComponent.MOVE_RIGHT);
 		}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.A)) {
 			body.setLinearVelocity(-movementComponent.velocity, 0);
-			stateComponent.setState(pacman.MOVE_LEFT);
+			stateComponent.setState(PacmanComponent.MOVE_LEFT);
 		}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.W)) {
 			body.setLinearVelocity(0, movementComponent.velocity);
-			stateComponent.setState(pacman.MOVE_UP);
+			stateComponent.setState(PacmanComponent.MOVE_UP);
 		}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.S)) {
 			body.setLinearVelocity(0, -movementComponent.velocity);
-			stateComponent.setState(pacman.MOVE_DOWN);
+			stateComponent.setState(PacmanComponent.MOVE_DOWN);
 		}
 		
-		
+		// invi count
+		if(Manager.manager.isInvi ) {
+			pacman.inviTime +=deltaTime;
+			pacman.body.setActive(false);
+			// set non body active
+			if(pacman.inviTime >= 1.1f)
+				pacman.body.setActive(true);
+			if (pacman.inviTime >= 5f) {
+				Manager.manager.isInvi = false;
+				pacman.inviTime = 0;
+				
+			}
+		}
 	}
 	
 	/*private void checkMove(Body body) {

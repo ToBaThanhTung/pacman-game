@@ -16,11 +16,13 @@ public class PacmanComponent implements Component{
 	public int curState;
 	public int hp;
 	public boolean isDie;
+	public float inviTime;
 	public PacmanComponent(Body b) {
 		body = b;
 		curState = STAY;
 		isDie = false;
 		pacmanDieTime = 0;
+		inviTime = 0;
 	}
 	
 	

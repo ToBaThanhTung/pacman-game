@@ -29,7 +29,7 @@ public class StateComponent implements Component{
 	
 	public void setState(int newState) {
 		state = newState;
-		time = 0;
+		//time = 0;
 	}
 	
 }

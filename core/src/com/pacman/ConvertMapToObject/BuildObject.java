@@ -116,18 +116,32 @@ public class BuildObject {
 					Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 					checkPosition(rectangle);
 					
+					
+					
+					
 					Body body;
 					FixtureDef fixtureDef = new FixtureDef();
 					CircleShape circleShape = new CircleShape();
 					BodyDef bDef = new BodyDef();
+					TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
+					PillComponent pillComponent = engine.createComponent(PillComponent.class);
+					
+					// 1  = big pill 
+					if(object.getProperties().containsKey("1")) {
+						textureComponent.region = Asset.bigPill;
+						pillComponent.isBig = true;
+						circleShape.setRadius(0.4f);
+					}
+					else {
+						textureComponent.region = Asset.pill;
+						pillComponent.isBig = false;
+						circleShape.setRadius(0.2f);
+					}
 					
 					bDef.type = BodyType.DynamicBody;
-					
 					bDef.position.set((rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2));
 					Manager.manager.ghostSpawPos.set((rectangle.getX() + rectangle.getWidth() / 2), (rectangle.getY() + rectangle.getHeight() / 2));
 					body = world.createBody(bDef);
-					
-					circleShape.setRadius(0.2f);
 					fixtureDef.isSensor = true;
 					fixtureDef.shape = circleShape;
 					fixtureDef.filter.categoryBits = Manager.PillBit ;
@@ -138,16 +152,22 @@ public class BuildObject {
 					
 					//body.setUserData("Pill");
 					MovementComponent movementComponent = new MovementComponent(body);
-					PillComponent pillComponent = engine.createComponent(PillComponent.class);
-					TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
+				
+					
 					
 					
 					TransformComponent transformComponent = new TransformComponent((rectangle.getX() + rectangle.getWidth() / 2) , 
 																	(rectangle.getY() + rectangle.getHeight() / 2));
-					textureComponent.region = Asset.pill;
+					
+					
+					
+					System.out.println(object.getName());
+					
+						
 					
 					entity.add(movementComponent);
 					entity.add(pillComponent);
+					
 					entity.add(textureComponent);
 					entity.add(transformComponent);
 					engine.addEntity(entity);
@@ -221,7 +241,7 @@ public class BuildObject {
 		animation.ani.put(GhostComponent.MOVE_RIGHT,  Asset.ghostRedMoveRight);
 		animation.ani.put(GhostComponent.MOVE_UP,  Asset.ghostRedMoveUp);
 		animation.ani.put(GhostComponent.MOVE_DOWN,  Asset.ghostRedMoveDown);
-		
+		animation.ani.put(GhostComponent.SCARE, Asset.ghostScare);
 		
 		entity.add(ghost);
 		entity.add(movement);
