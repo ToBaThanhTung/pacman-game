@@ -177,12 +177,15 @@ public class BuildObject {
 					Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 					checkPosition(rectangle);
 					Manager.manager.ghostSpawPos.set(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
+					// create 4 ghost
+					for(int i = 0; i < 4; i++)
 					createGhost(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
 				}
 				
 	}
 	
 	private void createGhost(float x, float y){
+		
 		Entity entity = engine.createEntity();
 		Body pBody;
 		
@@ -268,13 +271,13 @@ public class BuildObject {
 		MovementComponent movement = new MovementComponent(pBody);
 		Manager.manager.pacmanLocation = pacman.getBody().getPosition();
 		
+		animation.ani.put(PacmanComponent.DIE,  Asset.pacmanDie);
 		animation.ani.put(PacmanComponent.MOVE_UP,  Asset.pacmanMoveUp);
 		animation.ani.put(PacmanComponent.MOVE_DOWN,  Asset.pacmanMoveDown);
 		animation.ani.put(PacmanComponent.MOVE_LEFT,  Asset.pacmanMoveLeft);	
 		animation.ani.put(PacmanComponent.MOVE_RIGHT,  Asset.pacmanMoveRight);
 		animation.ani.put(PacmanComponent.STAY,  Asset.pacmanStand);
-		animation.ani.put(PacmanComponent.DIE,  Asset.pacmanDie);
-		
+	
 		
 		entity.add(pacman);
 		entity.add(movement);

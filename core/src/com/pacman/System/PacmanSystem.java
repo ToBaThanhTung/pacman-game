@@ -40,14 +40,14 @@ public class PacmanSystem extends IteratingSystem {
 		
 		if(pacman.isDie == true) {
 			stateComponent.setState(pacman.DIE);
-		//	System.out.println("CHECKKKKKKKKKK");
 			pacman.pacmanDieTime += deltaTime;
 		}
 		if(pacman.pacmanDieTime > 1.1f) {
-			pacman.isDie = false;
+			pacman.isDie = false; 
 			stateComponent.setState(pacman.STAY);
 			pacman.body.setTransform(Manager.manager.pacmanSpawPos, 0);
 			pacman.pacmanDieTime = 0;
+			pacman.body.setLinearVelocity(0, 0);
 		}
 		
 		// input

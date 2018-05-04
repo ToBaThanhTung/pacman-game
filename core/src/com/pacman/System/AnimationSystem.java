@@ -28,9 +28,9 @@ public class AnimationSystem extends IteratingSystem{
 		
 		Animation animation = animationComponent.ani.get(stateComponent.getState());
 		
-		if (animation != null) {
+		
 			textureComponent.region = (TextureRegion) animation.getKeyFrame(stateComponent.getStateTime()); 
-		}
+		
 		
 		stateComponent.increaseTime(deltaTime);
 	}

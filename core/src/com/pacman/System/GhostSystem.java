@@ -39,13 +39,13 @@ public class GhostSystem extends IteratingSystem {
 		StateComponent stateComponent = stateM.get(entity);
 		MovementComponent movementComponent = mvM.get(entity);
 		Body body = movementComponent.body;
-		// Graph map = Asset.finding.map;
 
-		// target.set(x, y);
-		// System.out.println(target.toString());
-		// Gdx.app.log("pos pacman",Manager.manager.pacmanLocation.toString());
 		
-		ghost.time += deltaTime;
+		
+		ghost.ghostEntity.update(deltaTime);
+		stateComponent.setState(ghost.curState);
+		
+		/*ghost.time += deltaTime;
 
 		if (ghost.time > 0.1f) {
 			curPos = ghost.getBody().getPosition();
@@ -87,7 +87,7 @@ public class GhostSystem extends IteratingSystem {
 			}
 
 		}
-
+*/
 		// just test movement
 		if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
 			body.setLinearVelocity(movementComponent.velocity, 0);
