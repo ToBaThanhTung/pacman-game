@@ -56,7 +56,8 @@ public class WorldContactListener implements ContactListener{
 				
 				if(ghostComponent.isScareMode == true) {
 					Manager.score += 500;
-					Gdx.app.log("contact ", "Ghost die!");
+					Gdx.app.log("contact ", "Ghost die!" + " + 500 score!");
+					ghostComponent.ghostDie = true;
 				}
 				else {
 					//pacmanComponent.hp --;
@@ -73,14 +74,15 @@ public class WorldContactListener implements ContactListener{
 					//StateComponent stateComponent = stateM.get(entity);
 					if(ghostComponent.isScareMode == true) {
 						Manager.score += 500;
-						Gdx.app.log("contact ", "Ghost die!");
+						Gdx.app.log("contact ", "Ghost die!" + " + 500 score!"  );
+						ghostComponent.ghostDie = true;
 					}
 					else {
 						//pacmanComponent.hp --;
-						Gdx.app.log("contact ", "Pacman die!");
+						Gdx.app.log("contact ", "Pacman die!" );
 						Manager.manager.playAlive --;
 					//	stateComponent.setState(pacmanComponent.DIE);
-						pacmanComponent.isDie = true;
+						pacmanComponent.isDie = true; 
 					}
 				}
 		}

@@ -22,6 +22,7 @@ public class GhostComponent implements Component{
 	public float scareTime = 0;
 	public GhostEntity ghostEntity;
 	public boolean isScareMode;
+	public boolean ghostDie;
 	
 	public GhostComponent(Body b) {
 		body = b;
@@ -31,6 +32,7 @@ public class GhostComponent implements Component{
 		time = 0;
 		isScareMode = false;
 		scareTime = 0;
+		ghostDie = false;
 	}
 	
 	public Body getBody() {

@@ -135,6 +135,7 @@ public class BuildObject {
 					else {
 						textureComponent.region = Asset.pill;
 						pillComponent.isBig = false;
+						
 						circleShape.setRadius(0.2f);
 					}
 					
@@ -212,6 +213,7 @@ public class BuildObject {
 		BodyDef  def = new BodyDef();
 		def.type = BodyDef.BodyType.DynamicBody;
 		def.position.set(x, y);
+		Manager.manager.ghostSpawPos.set(x,y);
 		def.fixedRotation = true;
 		
 		pBody = world.createBody(def);
@@ -242,7 +244,7 @@ public class BuildObject {
 		animation.ani.put(GhostComponent.MOVE_UP,  Asset.ghostRedMoveUp);
 		animation.ani.put(GhostComponent.MOVE_DOWN,  Asset.ghostRedMoveDown);
 		animation.ani.put(GhostComponent.SCARE, Asset.ghostScare);
-		
+		animation.ani.put(GhostComponent.DIE, Asset.ghostDie);
 		entity.add(ghost);
 		entity.add(movement);
 		entity.add(transform);

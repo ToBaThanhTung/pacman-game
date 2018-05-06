@@ -1,0 +1,51 @@
+							---GHOST STATE---
+--MOVE_UP
+	- move up
+	- check change state
+		+ when distance && pacman not die == 6f -> change to hunter state
+		+ when touch wall -> change to random(down, left, right) state
+		+ when pacman eat big pill -> change to scare state
+--MOVE_DOWN
+	- move down
+	- check change state
+		+ when distance  == 6f  && pacman not die -> change to hunter state
+		+ when touch wall -> change to random(up, left, right) state
+		+ when pacman eat big pill -> change to scare state
+--MOVE_LEFT
+	- move left
+	- check change state
+		+ when distance  == 6f - && pacman not die -> change to hunter state
+		+ when touch wall -> change to random(down, up, right) state
+		+ when pacman eat big pill -> change to scare state
+--MOVE_RIGHT
+	- move right
+	- check change state
+		+ when distance  == 6f  && pacman not die -> change to hunter state
+		+ when touch wall -> change to random(down, left, right) state
+		+ when pacman eat big pill -> change to scare state
+--HUNTER
+	- if pacman not die && in range
+		 ->  find next node to move
+	- if not in range 
+		-> random(down, left, right, up) state
+	- check change state
+		+ when pacman eat big pill -> change to scare state
+--SCARE
+	-if time <= 10f
+		if	in range
+			-> find next node to move
+			-> check touch pacman -> move to die state
+		else
+			if check touch pacman
+				-> move to die state 
+			else
+				-> random move
+	else
+		random(up, left, right, down) state
+--DIE
+	- if time < 1f
+		-> cannot touch
+	  else 
+	  	random(left, right, up, down) state
+	  	
+

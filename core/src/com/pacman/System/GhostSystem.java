@@ -49,12 +49,26 @@ public class GhostSystem extends IteratingSystem {
 		}
 		
 		if(ghost.isScareMode) {
-			System.out.println("ghost scare state!!!!!");
+			//System.out.println("ghost scare state!!!!!");
 			ghost.scareTime += deltaTime;
 			if(ghost.scareTime >= 10f) {
 				ghost.scareTime = 0;
 				ghost.isScareMode = false;
 			}
+		}
+		
+		if(ghost.ghostDie) {
+			ghost.time += deltaTime;
+			stateComponent.setState(GhostComponent.DIE);
+			ghost.body.setActive(false);
+			if(ghost.time >= 0.5f) {
+				ghost.ghostDie = false;
+				ghost.body.setTransform(Manager.manager.ghostSpawPos, 0);
+				stateComponent.setState(GhostComponent.MOVE_UP);
+				body.setActive(true);
+				ghost.time = 0;
+			}
+			
 		}
 		
 		/*ghost.time += deltaTime;

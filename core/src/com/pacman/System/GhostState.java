@@ -14,105 +14,102 @@ import com.pacman.Astar.Node;
 import com.pacman.component.GhostComponent;
 import com.pacman.manager.Manager;
 
-public enum GhostState implements State<GhostEntity>{
-	MOVE_UP(){
+public enum GhostState implements State<GhostEntity> {
+	MOVE_UP() {
 		@Override
 		public void update(GhostEntity entity) {
 			entity.ghostComponent.curState = GhostComponent.MOVE_UP;
 			Body tempBody = entity.ghostComponent.getBody();
 			tempBody.setLinearVelocity(0, entity.velocity);
-			
-			if(isHitWall(entity, GhostComponent.MOVE_UP)) {
+
+			if (isHitWall(entity, GhostComponent.MOVE_UP)) {
 				System.out.println("hit wall");
-				changeDirection(entity, GhostComponent.MOVE_UP);
+				changeDirectionState(entity, GhostComponent.MOVE_UP);
 			}
-			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
-				if(entity.ghostComponent.isScareMode)
-					entity.ghostComponent.curState = GhostComponent.SCARE;
+			if (nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if (entity.ghostComponent.isScareMode)
+					entity.state.changeState(GhostState.SCARE);
 				else
 					entity.state.changeState(GhostState.HUNTER);
 			}
-			if(entity.ghostComponent.isScareMode) {
-				entity.ghostComponent.curState = GhostComponent.SCARE;
-				
+			if (entity.ghostComponent.isScareMode) {
+				entity.state.changeState(GhostState.SCARE);
 			}
-		}		
+		}
 	},
-	MOVE_DOWN(){
+	MOVE_DOWN() {
 		@Override
 		public void update(GhostEntity entity) {
 			entity.ghostComponent.curState = GhostComponent.MOVE_DOWN;
 			Body tempBody = entity.ghostComponent.getBody();
 			tempBody.setLinearVelocity(0, -entity.velocity);
-			if(isHitWall(entity, GhostComponent.MOVE_DOWN)) {
+			if (isHitWall(entity, GhostComponent.MOVE_DOWN)) {
 				System.out.println("hit wall");
-				changeDirection(entity, GhostComponent.MOVE_DOWN);
+				changeDirectionState(entity, GhostComponent.MOVE_DOWN);
 			}
-			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
-				if(entity.ghostComponent.isScareMode)
-					entity.ghostComponent.curState = GhostComponent.SCARE;
+			if (nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if (entity.ghostComponent.isScareMode)
+					entity.state.changeState(GhostState.SCARE);
 				else
 					entity.state.changeState(GhostState.HUNTER);
 			}
-			if(entity.ghostComponent.isScareMode) {
-				entity.ghostComponent.curState = GhostComponent.SCARE;
+			if (entity.ghostComponent.isScareMode) {
+				entity.state.changeState(GhostState.SCARE);
 			}
-		}		
+		}
 	},
-	MOVE_LEFT(){
+	MOVE_LEFT() {
 		@Override
 		public void update(GhostEntity entity) {
 			entity.ghostComponent.curState = GhostComponent.MOVE_LEFT;
 			Body tempBody = entity.ghostComponent.getBody();
 			tempBody.setLinearVelocity(-entity.velocity, 0);
-			//System.out.println(tempBody.getWorldCenter());
-			if(isHitWall(entity, GhostComponent.MOVE_LEFT)) {
+			// System.out.println(tempBody.getWorldCenter());
+			if (isHitWall(entity, GhostComponent.MOVE_LEFT)) {
 				System.out.println("hit wall");
-				changeDirection(entity, GhostComponent.MOVE_LEFT);
+				changeDirectionState(entity, GhostComponent.MOVE_LEFT);
 			}
-			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
-				if(entity.ghostComponent.isScareMode)
-					entity.ghostComponent.curState = GhostComponent.SCARE;
+			if (nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if (entity.ghostComponent.isScareMode)
+					entity.state.changeState(GhostState.SCARE);
 				else
 					entity.state.changeState(GhostState.HUNTER);
 			}
-			if(entity.ghostComponent.isScareMode) {
-				entity.ghostComponent.curState = GhostComponent.SCARE;
+			if (entity.ghostComponent.isScareMode) {
+				entity.state.changeState(GhostState.SCARE);
 			}
-		}		
+		}
 	},
-	MOVE_RIGHT(){
+	MOVE_RIGHT() {
 		@Override
 		public void update(GhostEntity entity) {
 			entity.ghostComponent.curState = GhostComponent.MOVE_RIGHT;
 			Body tempBody = entity.ghostComponent.getBody();
 			tempBody.setLinearVelocity(entity.velocity, 0);
-			if(isHitWall(entity, GhostComponent.MOVE_RIGHT)) {
+			if (isHitWall(entity, GhostComponent.MOVE_RIGHT)) {
 				System.out.println("hit wall");
-				changeDirection(entity, GhostComponent.MOVE_RIGHT);
+				changeDirectionState(entity, GhostComponent.MOVE_RIGHT);
 			}
-			if(nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
-				if(entity.ghostComponent.isScareMode)
-					entity.ghostComponent.curState = GhostComponent.SCARE;
+			if (nearPlayer(entity, 6f) && !Manager.manager.isInvi) {
+				if (entity.ghostComponent.isScareMode)
+					entity.state.changeState(GhostState.SCARE);
 				else
 					entity.state.changeState(GhostState.HUNTER);
 			}
-			if(entity.ghostComponent.isScareMode) {
-				entity.ghostComponent.curState = GhostComponent.SCARE;
-				System.out.println("checkkkkk!!!!!!!!!!!!!!!!!!!");
+			if (entity.ghostComponent.isScareMode) {
+				entity.state.changeState(GhostState.SCARE);
 			}
-			
-		}		
+
+		}
 	},
-	HUNTER(){
+	HUNTER() {
 		@Override
 		public void update(GhostEntity entity) {
-			//System.out.println("hunter mod");
-			
-			
+			// System.out.println("hunter mod");
+
 			Vector2 curPos = new Vector2();
 			Vector2 target = new Vector2();
-			
+
 			if (entity.time > 0.1f) {
 				curPos = entity.getPos();
 				int targetX = MathUtils.floor(Manager.manager.pacmanLocation.x);
@@ -134,72 +131,157 @@ public enum GhostState implements State<GhostEntity>{
 						System.out.println("go R");
 						entity.ghostComponent.getBody().setLinearVelocity(entity.velocity, 0);
 						entity.ghostComponent.curState = GhostComponent.MOVE_RIGHT;
+
 					}
 
 					else if ((node.x - curPos.x) * entity.velocity < 0) {
 						System.out.println("go L");
 						entity.ghostComponent.getBody().setLinearVelocity(-entity.velocity, 0);
 						entity.ghostComponent.curState = GhostComponent.MOVE_LEFT;
+
 					} else if ((node.y - curPos.y) * entity.velocity > 0) {
 						System.out.println("go Down");
 						entity.ghostComponent.getBody().setLinearVelocity(0, entity.velocity);
 						entity.ghostComponent.curState = GhostComponent.MOVE_DOWN;
+
 					} else if ((node.y - curPos.y) * entity.velocity < 0) {
 						System.out.println("go Up");
 						entity.ghostComponent.getBody().setLinearVelocity(0, -entity.velocity);
 						entity.ghostComponent.curState = GhostComponent.MOVE_UP;
+
 					}
-				
-				}
-				else {
-					changeDirection(entity, randDirection(5));
-				}
+
+				} 
 				entity.time = 0;
-			
-			}	
-			if(!nearPlayer(entity, 6f)) {
-				changeDirection(entity, 0);
+
+			}
+			if (!nearPlayer(entity, 6f)) {
+				changeDirectionState(entity, 5);
+				return;
+			}
+			if (entity.ghostComponent.isScareMode) {
+				entity.state.changeState(GhostState.SCARE);
 			}
 		}
 	},
-	SCARE(){
+	SCARE() {
 		@Override
 		public void update(GhostEntity entity) {
 			entity.ghostComponent.curState = GhostComponent.SCARE;
+			Gdx.app.log("Ghost state", "SCARE STATE !!!");
+			Vector2 curPos = new Vector2();
+			Vector2 target = new Vector2();
+
+			if (entity.time > 0.1f && nearPlayer(entity, 6f)) {
+				curPos = entity.getPos();
+				int targetX = MathUtils.floor(Manager.manager.pacmanLocation.x);
+				int targetY = MathUtils.floor(Manager.manager.pacmanLocation.y);
+				int curPosX = MathUtils.floor(entity.getPos().x);
+				int curPosY = MathUtils.floor(entity.getPos().y);
+				Node node;
+				target.set(targetX, targetY);
+				curPos.set(curPosX, curPosY);
+
+				node = Asset.finding.findNextNode(curPos, target);
+
+				Gdx.app.log("ghost cur pos", curPos.toString());
+
+				if (node != null) {
+					Gdx.app.log("ghost move node", node.toString());
+
+					if ((node.x - curPos.x) * entity.velocity < 0) {
+						System.out.println("go R");
+						entity.ghostComponent.getBody().setLinearVelocity(entity.velocity, 0);
+						if (isHitWall(entity, GhostComponent.MOVE_RIGHT)) {
+							changeDirection(entity, GhostComponent.MOVE_RIGHT);
+						}
+					}
+
+					else if ((node.x - curPos.x) * entity.velocity > 0) {
+						System.out.println("go L");
+						entity.ghostComponent.getBody().setLinearVelocity(-entity.velocity, 0);
+						if (isHitWall(entity, GhostComponent.MOVE_LEFT)) {
+							changeDirection(entity, GhostComponent.MOVE_LEFT);
+						}
+					} else if ((node.y - curPos.y) * entity.velocity < 0) {
+						System.out.println("go Down");
+						entity.ghostComponent.getBody().setLinearVelocity(0, entity.velocity);
+						if (isHitWall(entity, GhostComponent.MOVE_DOWN)) {
+							changeDirection(entity, GhostComponent.MOVE_DOWN);
+						}
+					} else if ((node.y - curPos.y) * entity.velocity > 0) {
+						System.out.println("go Up");
+						entity.ghostComponent.getBody().setLinearVelocity(0, -entity.velocity);
+						if (isHitWall(entity, GhostComponent.MOVE_UP)) {
+							changeDirection(entity, GhostComponent.MOVE_UP);
+						}
+					}
+
+				} 
+				entity.time = 0;
+
+			}
 			
+			if (!nearPlayer(entity, 6f)) {
+
+				changeDirection(entity, 5);
+				
+			}
+			
+			if(!entity.ghostComponent.isScareMode) {
+				changeDirectionState(entity, 5);
+			}
 		}
-		
+
 	};
-	
+
 	private boolean isWall;
 	private Vector2 V1 = new Vector2();
 	private Vector2 V2 = new Vector2();
-	private java.util.Random random ;
-	
-	
-	
-	 protected boolean nearPlayer(GhostEntity entity, float distance) {
-	        if (Manager.manager.pacmanLocation == null) {
-	            return false;
-	        }
-	        Vector2 ghostCurPos = entity.getPos();
-	        Vector2 playerPos = Manager.manager.pacmanLocation;
+	private java.util.Random random;
 
-	        return ghostCurPos.dst2(playerPos) < distance * distance;
-	    }
-	//private 
+	protected boolean nearPlayer(GhostEntity entity, float distance) {
+		if (Manager.manager.pacmanLocation == null) {
+			return false;
+		}
+		Vector2 ghostCurPos = entity.getPos();
+		Vector2 playerPos = Manager.manager.pacmanLocation;
+
+		return ghostCurPos.dst2(playerPos) < distance * distance;
+	}
+
+	// private
 	protected int randDirection(int preDirection) {
 		random = new java.util.Random();
 		int rand = random.nextInt(4);
-		while(rand == preDirection) {
+		while (rand == preDirection) {
 			rand = random.nextInt(4);
 		}
 		return rand;
 	}
-	
-	
-	
+
 	protected void changeDirection(GhostEntity entity, int state) {
+		
+		int newState = randDirection(state);
+		switch (newState) {
+		case GhostComponent.MOVE_UP:
+			entity.ghostComponent.body.setLinearVelocity(0, entity.velocity);
+			break;
+		case GhostComponent.MOVE_DOWN:
+			entity.ghostComponent.body.setLinearVelocity(0, -entity.velocity);
+			break;
+		case GhostComponent.MOVE_LEFT:
+			entity.ghostComponent.body.setLinearVelocity(-entity.velocity, 0);
+			break;
+		case GhostComponent.MOVE_RIGHT:
+			entity.ghostComponent.body.setLinearVelocity(entity.velocity, 0);
+			break;
+		default:
+			break;
+		}
+	}
+
+	protected void changeDirectionState(GhostEntity entity, int state) {
 		System.out.println(randDirection(state));
 		int newState = randDirection(state);
 		switch (newState) {
@@ -218,11 +300,10 @@ public enum GhostState implements State<GhostEntity>{
 		default:
 			break;
 		}
-		//entity.state.changeState(GhostState.MOVE_UP);
-		
+		// entity.state.changeState(GhostState.MOVE_UP);
+
 	}
-	
-	
+
 	protected boolean isHitWall(GhostEntity entity, int state) {
 		isWall = false;
 		Body body = entity.ghostComponent.getBody();
@@ -245,35 +326,36 @@ public enum GhostState implements State<GhostEntity>{
 			break;
 		}
 		world.rayCast(raycast, V1, V2);
-		
+
 		return isWall;
 	}
-	
+
 	protected RayCastCallback raycast = new RayCastCallback() {
-		
+
 		@Override
 		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-			if(fixture.getFilterData().categoryBits == Manager.wallBit) {
+			if (fixture.getFilterData().categoryBits == Manager.wallBit) {
 				isWall = true;
 				return 0;
 			}
 			return 0;
 		}
 	};
-	
+
 	@Override
 	public void enter(GhostEntity entity) {
-		//entity.ghostComponent.getBody().setLinearVelocity(0, 0);
-		
+		// entity.ghostComponent.getBody().setLinearVelocity(0, 0);
+
 	}
+
 	@Override
 	public void exit(GhostEntity entity) {
 		entity.node = null;
 	}
+
 	@Override
 	public boolean onMessage(GhostEntity entity, Telegram telegram) {
 		return false;
 	}
 
 }
-

@@ -37,6 +37,8 @@ public class Asset {
 	public static PathFinding finding;
 
 	public static TextureRegion bigPill;
+
+	public static Animation ghostDie;
 	
 	
 	
@@ -60,6 +62,7 @@ public class Asset {
 		ghostRedMoveUp = new Animation<TextureRegion>(0.1f, new TextureRegion(items, 490 , 77, 32, 32), new TextureRegion(items, 490, 116, 32, 32));
 		ghostRedMoveDown = new Animation<TextureRegion>(0.1f, new TextureRegion(items, 490 , 228, 32, 32), new TextureRegion(items, 490, 268, 32, 32));
 		ghostScare = new  Animation<TextureRegion>(0.1f, new TextureRegion(items, 3 , 416, 32, 32), new TextureRegion(items, 40 , 416, 32, 32));
+		ghostDie = new Animation<TextureRegion>(0.1f, new TextureRegion(items, 78 , 416, 32, 32));
 		ghostRedMoveDown.setPlayMode(PlayMode.LOOP_PINGPONG);
 		ghostRedMoveUp.setPlayMode(PlayMode.LOOP_PINGPONG);
 		ghostRedMoveLeft.setPlayMode(PlayMode.LOOP_PINGPONG);
