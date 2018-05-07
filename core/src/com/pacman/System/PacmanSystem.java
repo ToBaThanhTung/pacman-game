@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -54,7 +55,7 @@ public class PacmanSystem extends IteratingSystem {
 			body.setLinearVelocity(movementComponent.velocity, 0);
 			stateComponent.setState(PacmanComponent.MOVE_RIGHT);
 		}
-		if(Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.A) ) {
 			body.setLinearVelocity(-movementComponent.velocity, 0);
 			stateComponent.setState(PacmanComponent.MOVE_LEFT);
 		}
@@ -62,7 +63,7 @@ public class PacmanSystem extends IteratingSystem {
 			body.setLinearVelocity(0, movementComponent.velocity);
 			stateComponent.setState(PacmanComponent.MOVE_UP);
 		}
-		if(Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.S) ) {
 			body.setLinearVelocity(0, -movementComponent.velocity);
 			stateComponent.setState(PacmanComponent.MOVE_DOWN);
 		}
@@ -82,24 +83,16 @@ public class PacmanSystem extends IteratingSystem {
 		}
 	}
 	
-	/*private void checkMove(Body body) {
-		canMove = true;
-		World world = body.getWorld();
-		
-		RayCastCallback rayCastCallback = new RayCastCallback() {
-			
-			@Override
-			public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-				if(fixture.getFilterData().categoryBits == Manager.wallBit) {
-					canMove = false;
-				}
-				return 0;
-			}
-		};
-		
-		world.rayCast(rayCastCallback, , point2);
-		
-	}*/
+	private boolean canMove(Vector2 pos) {
+		float x = pos.x;
+		float y = pos.y;
+		float xMin = MathUtils.floor(x) + 0.3f;
+		float xMax = MathUtils.floor(x) + 0.7f;
+		float yMin = MathUtils.floor(y) + 0.3f;
+		float yMax = MathUtils.floor(y) + 0.7f;
+		return (x > xMin && x < xMax && y > yMin && y <yMax);
+	}
+	
 	
 	
 }

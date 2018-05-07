@@ -20,18 +20,9 @@ public class Node {
 	public int getIndex() {
 		return index;
 	}
-	
-	
-	public boolean equals(Object obj) {
-		if (obj instanceof Node) {
-			Node node = (Node) obj;
-			return (x == node.x && y == node.y);
-		}
-		else return false;
-	}
 
 	public Array<Connection<Node>> getConnections() {
-		// TODO Auto-generated method stub
+
 		return connections;
 	}
 	@Override

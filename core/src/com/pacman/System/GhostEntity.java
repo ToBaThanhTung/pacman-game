@@ -15,11 +15,13 @@ public class GhostEntity implements Telegraph{
 	
 	public float time;
 	public Node node;
+	public float freeScareTime;
 	
 	public GhostEntity(GhostComponent ghostComponent) {
 		state = new DefaultStateMachine<GhostEntity, GhostState>(this);
 		this.ghostComponent = ghostComponent;
 		time = 0;
+		freeScareTime = 0;
 	}
 	
 	public Vector2 getPos() {

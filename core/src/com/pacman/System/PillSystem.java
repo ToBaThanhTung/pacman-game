@@ -6,11 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.pacman.component.MovementComponent;
-import com.pacman.component.PacmanComponent;
 import com.pacman.component.PillComponent;
-import com.pacman.component.StateComponent;
-import com.pacman.component.TextureComponent;
-import com.pacman.component.TransformComponent;
 import com.pacman.manager.Manager;
 
 public class PillSystem extends IteratingSystem{

@@ -41,7 +41,7 @@ public class GhostSystem extends IteratingSystem {
 		Body body = movementComponent.body;
 
 		
-		
+		Gdx.app.log("current Ghost", ghost.getBody().getPosition().toString() );
 		ghost.ghostEntity.update(deltaTime);
 		stateComponent.setState(ghost.curState);
 		if(Manager.manager.isGhostScare) {
@@ -61,7 +61,7 @@ public class GhostSystem extends IteratingSystem {
 			ghost.time += deltaTime;
 			stateComponent.setState(GhostComponent.DIE);
 			ghost.body.setActive(false);
-			if(ghost.time >= 0.5f) {
+			if(ghost.time >= 3f) {
 				ghost.ghostDie = false;
 				ghost.body.setTransform(Manager.manager.ghostSpawPos, 0);
 				stateComponent.setState(GhostComponent.MOVE_UP);
