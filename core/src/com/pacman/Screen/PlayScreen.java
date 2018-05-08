@@ -4,6 +4,7 @@ package com.pacman.Screen;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.pacman.Asset;
 import com.pacman.PacMan;
@@ -49,7 +51,8 @@ public class PlayScreen implements Screen{
 	
 	// draw text
 	private BitmapFont font;
-	
+	public static final String FONT_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>";
+	private Label label;
 	// just for demo
 	
 	private TextureAtlas atlas; 
@@ -69,13 +72,15 @@ public class PlayScreen implements Screen{
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(WIDTH, HEIGHT, camera);
 		camera.translate(WIDTH / 2, HEIGHT / 2);
-		camera.update();
+		//camera.update();
 		batch = new SpriteBatch();
 		
 		// load font
-		font = new BitmapFont();
-		
+		font = new BitmapFont(Gdx.files.internal("pacmanfont.ttf"), false);
+		//Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE) ;
 		// load assets
+
+				
 		Asset.load();
 		
 		world = new World(new Vector2(0, 0), true);
@@ -121,8 +126,11 @@ public class PlayScreen implements Screen{
 		engine.update(delta);
 		
 		
-		
-	
+		/*batch.begin();
+		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		 font.draw(batch, "some string", 25, 160);
+		 batch.end();
+	*/
 		b2Renderer.render(world, camera.combined);
 		
 		
@@ -139,6 +147,7 @@ public class PlayScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width , height);
+		camera.update();
 	}
 
 	@Override
@@ -162,6 +171,8 @@ public class PlayScreen implements Screen{
 		world.dispose();
 		b2Renderer.dispose();
 		batch.dispose();
+		font.dispose();
+		
 		
 	}
 	

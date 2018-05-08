@@ -1,5 +1,13 @@
 apply plugin: "java"
 
+//Defines dependencies for the :desktop project
+    dependencies {
+        //Adds dependency on the :core project as well as the gdx lwjgl backend and native dependencies
+        compile project(":core")
+       compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+       compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    }
+
 sourceCompatibility = 1.6
 sourceSets.main.java.srcDirs = [ "src/" ]
 
