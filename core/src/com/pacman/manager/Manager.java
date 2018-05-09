@@ -15,7 +15,7 @@ public class Manager implements Disposable{
 	
 	
 	public boolean gameOver = false;
-	public static int score = 0;
+	public static Integer score = 1000;
 
 	public static final short ghostBit = 1 << 5;
 	public int highScore = 0;
@@ -38,8 +38,6 @@ public class Manager implements Disposable{
 		gameOver = true;
 		
 	}
-	
-	
 
 	@Override
 	public void dispose() {

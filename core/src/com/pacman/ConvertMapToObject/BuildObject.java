@@ -199,7 +199,7 @@ public class BuildObject {
 					checkPosition(rectangle);
 					Manager.manager.ghostSpawPos.set(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
 					// create 4 ghost
-					for(int i = 0; i < 4; i++)
+					for(int i = 0; i < 5; i++)
 					createGhost(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2);
 				}
 				
@@ -232,7 +232,7 @@ public class BuildObject {
 		AnimationComponent animation = engine.createComponent(AnimationComponent.class);
 		StateComponent state = new StateComponent(GhostComponent.MOVE_DOWN);
 		GhostComponent ghost = new GhostComponent(pBody);
-		TransformComponent transform = new TransformComponent(x, y, 1);
+		TransformComponent transform = new TransformComponent(x, y, 0);
 		
 		TextureComponent texture = engine.createComponent(TextureComponent.class);
 		

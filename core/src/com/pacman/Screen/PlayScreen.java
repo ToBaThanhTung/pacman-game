@@ -1,6 +1,5 @@
 package com.pacman.Screen;
 
-
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
@@ -26,20 +26,20 @@ import com.pacman.ConvertMapToObject.BuildObject;
 import com.pacman.ConvertMapToObject.WorldContactListener;
 
 import com.pacman.System.*;
+import com.pacman.manager.Manager;
 
+public class PlayScreen implements Screen {
 
-public class PlayScreen implements Screen{
-	
 	private final float WIDTH = 35.0f;
 	private final float HEIGHT = 15.0f;
-	
+
 	private PacMan game;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private TiledMap tiledMap;
 	private OrthoCachedTiledMapRenderer tiledMapRenderer;
 	private FitViewport viewport;
-	
+
 	private PooledEngine engine;
 	private PacmanSystem pacmanSystem;
 	private MovementSystem movementSystem;
@@ -48,20 +48,22 @@ public class PlayScreen implements Screen{
 	private PillSystem pillSystem;
 	private StateSystem stateSystem;
 	private GhostSystem ghostSystem;
-	
+
 	// draw text
 	private BitmapFont font;
 	public static final String FONT_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;,{}\"´`'<>";
 	private Label label;
 	// just for demo
-	
-	private TextureAtlas atlas; 
+
+	private TextureAtlas atlas;
 	private TextureRegion pacmanTexture;
 	private Texture texture;
-			World world;
+	World world;
 	private Box2DDebugRenderer b2Renderer;
 	private Texture animationSheet;
-	
+	private Texture image = new Texture("animation1.png");
+	private TextureRegion Health = new TextureRegion(image, 642, 43, 32, 32);
+
 	public PlayScreen(PacMan game) {
 		this.game = game;
 		this.batch = game.batch;
@@ -72,23 +74,26 @@ public class PlayScreen implements Screen{
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(WIDTH, HEIGHT, camera);
 		camera.translate(WIDTH / 2, HEIGHT / 2);
-		//camera.update();
+		// camera.update();
 		batch = new SpriteBatch();
-		
-		// load font
-		font = new BitmapFont(Gdx.files.internal("pacmanfont.ttf"), false);
-		//Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE) ;
+
+		// load font nbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.
+		//FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("pacmanfont.ttf"));
+		font = new BitmapFont();
+		// font = generator.generateFont(12, FONT_CHARACTERS, false);
+		 font.setColor(Color.BLUE);
+		 font.getData().setScale(0.1f, 0.1f);
+		// Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE) ;
 		// load assets
 
-				
 		Asset.load();
-		
+
 		world = new World(new Vector2(0, 0), true);
 		world.setContactListener(new WorldContactListener());
 		b2Renderer = new Box2DDebugRenderer();
-	
+
 		engine = new PooledEngine();
-		
+
 		pacmanSystem = new PacmanSystem();
 		pillSystem = new PillSystem();
 		movementSystem = new MovementSystem();
@@ -96,7 +101,7 @@ public class PlayScreen implements Screen{
 		stateSystem = new StateSystem();
 		ghostSystem = new GhostSystem();
 		renderSystem = new RenderSystem(batch);
-		
+
 		engine.addSystem(pillSystem);
 		engine.addSystem(pacmanSystem);
 		engine.addSystem(ghostSystem);
@@ -104,55 +109,74 @@ public class PlayScreen implements Screen{
 		engine.addSystem(animationSystem);
 		engine.addSystem(stateSystem);
 		engine.addSystem(renderSystem);
-		
-		
+
 		// load map
 		tiledMap = new TmxMapLoader().load("map/map2.tmx");
 		// load the map, set the unit scale to 1/32 (1 unit == 32 pixels)
-		tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/32f);
-		
+		tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1 / 32f);
+
 		new BuildObject(tiledMap, world, engine).build();
-		
+
 	}
 
-	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		world.step(1/60f, 8, 3);
+		
+
+		world.step(1 / 60f, 8, 3);
 		batch.setProjectionMatrix(camera.combined);
 		engine.update(delta);
 		
 		
-		/*batch.begin();
-		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		 font.draw(batch, "some string", 25, 160);
-		 batch.end();
-	*/
-		b2Renderer.render(world, camera.combined);
+		
+
+		// draw alive
+		batch.begin();
+		for (int i = 1; i <= Manager.manager.playAlive; ++i) {
+			batch.draw(Health, i, 14, 1, 1);
+		}
 		
 		
+		batch.end();
 		
+	
+		// print score
+		
+		
+		batch.begin();
+		font.draw(batch,Manager.manager.score.toString(), 10, 15);
+		batch.end();
+
+		/*
+		 * batch.begin(); font.setColor(1.0f, 1.0f, 1.0f, 1.0f); font.draw(batch,
+		 * "some string", 25, 160); batch.end();
+		 */
+
+		// b2Renderer.render(world, camera.combined);
+
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
-	
-	
+		 if(Manager.manager.playAlive == 0) {
+			 Manager.manager.playAlive = 3;
+			 Manager.manager.score = 1000;
+	    	 game.setScreen(new MainMenu(game));
+	      }
 		
+
 	}
-	
-	
 
 	@Override
 	public void resize(int width, int height) {
-		viewport.update(width , height);
+		viewport.update(width, height);
 		camera.update();
 	}
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
@@ -172,8 +196,7 @@ public class PlayScreen implements Screen{
 		b2Renderer.dispose();
 		batch.dispose();
 		font.dispose();
-		
-		
+
 	}
-	
+
 }

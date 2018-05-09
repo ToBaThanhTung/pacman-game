@@ -2,6 +2,7 @@ package com.pacman;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.pacman.Screen.MainMenu;
 import com.pacman.Screen.PlayScreen;
 
 public class PacMan extends Game {
@@ -9,7 +10,7 @@ public class PacMan extends Game {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		setScreen(new PlayScreen(this));
+		setScreen(new MainMenu(this));
 		
 	}
 	@Override

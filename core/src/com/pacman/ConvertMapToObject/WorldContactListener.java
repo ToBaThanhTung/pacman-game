@@ -54,7 +54,7 @@ public class WorldContactListener implements ContactListener{
 				//StateComponent stateComponent = stateM.get(entity);
 				
 				if(ghostComponent.isScareMode == true) {
-					Manager.score += 500;
+					Manager.score += 300;
 					Gdx.app.log("contact ", "Ghost die!" + " + 500 score!");
 					ghostComponent.ghostDie = true;
 				}
@@ -72,7 +72,7 @@ public class WorldContactListener implements ContactListener{
 					GhostComponent ghostComponent = ghostM.get((Entity) fa.getBody().getUserData());
 					//StateComponent stateComponent = stateM.get(entity);
 					if(ghostComponent.isScareMode == true) {
-						Manager.score += 500;
+						Manager.score += 300;
 						Gdx.app.log("contact ", "Ghost die!" + " + 500 score!"  );
 						ghostComponent.ghostDie = true;
 					}

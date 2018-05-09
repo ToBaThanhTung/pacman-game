@@ -213,7 +213,7 @@ public enum GhostState implements State<GhostEntity> {
 				Node node;
 
 				curPos.set(curPosX, curPosY);
-				Gdx.app.log("cur ghost", curPos.toString());
+			//	Gdx.app.log("cur ghost", curPos.toString());
 				Graph map = Asset.finding.map;
 
 				float x = (Manager.manager.pacmanLocation.x + map.getWidth() / 2);
@@ -360,10 +360,10 @@ public enum GhostState implements State<GhostEntity> {
 		float x = entity.getPos().x;
 		float y = entity.getPos().y;
 		
-		float xMinimun = MathUtils.floor(x) + 0.4f;
-		float xMax = MathUtils.floor(x) + 0.6f;
-		float yMinimun = MathUtils.floor(y) + 0.4f;
-		float yMax = MathUtils.floor(y) + 0.6f;
+		float xMinimun = MathUtils.floor(x) + 0.3f;
+		float xMax = MathUtils.floor(x) + 0.7f;
+		float yMinimun = MathUtils.floor(y) + 0.3f;
+		float yMax = MathUtils.floor(y) + 0.7f;
 		return (x > xMinimun && x < xMax && y > yMinimun && y < yMax);
 		
 	}
